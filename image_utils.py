@@ -167,35 +167,23 @@ def class_reduction(mask,new_class):
     return mask
 
 
-def channel_class(mask,new_class):
+def channel_class(mask,desirable_class):
     """
-    Converts a class label mask into a one-hot encoded tensor.
+    Converts a segmentation mask with class labels into a one-hot encoded tensor with a specified number of classes.
 
     Args:
-        mask (np.ndarray): A 2D array or tensor representing the class labels. The shape should be [height, width] or 
-                           [batch_size, height, width]. Each pixel value corresponds to a class label.
-        new_class (int): The total number of classes in the mask. Determines the number of channels in the one-hot encoded tensor.
+        mask (torch.Tensor): A 3D tensor representing the segmentation mask with class labels.
+        new_class (int): The number of classes for the one-hot encoding.
 
     Returns:
-        torch.Tensor: A 3D tensor with shape [new_class, height, width], where each channel represents one class. 
-                      The tensor contains one-hot encoded values for each class label.
-
-    Notes:
-        - The function assumes that the input mask contains class labels from 0 to `new_class - 1`.
-        - The resulting one-hot tensor has `new_class` channels, each of size [height, width].
+        torch.Tensor: A 4D tensor representing the one-hot encoded mask, with dimensions [batch_size, num_classes, height, width].
     """
-    # Replace with the actual number of classes
-    mask = np.array(mask)
-    # Get the dimensions of the mask
-    height,width = mask.shape[-2],mask.shape[-1]
-
-    # Initialize a tensor for one-hot encoding
-    one_hot = torch.zeros((new_class , height, width), dtype=torch.float32)
-
-    # Fill the one-hot tensor
-    for c in range(new_class):
-        one_hot[c] = torch.tensor(mask == c, dtype=torch.float32)
-    return one_hot
+    mask = mask.squeeze(1)  # Remove the channel dimension: [32, 256, 256]
+    
+    # Generate one-hot encoding by comparing each pixel value to class indices
+    one_hot_mask = (mask.unsqueeze(1) == torch.arange(desirable_class, device=mask.device).view(1, -1, 1, 1)).float()
+    
+    return one_hot_mask
 
 def transform_image(image,lst):
     """
@@ -246,6 +234,7 @@ def transform_mask(mask,transforms_list):
     """
     types_to_remove = (T.ColorJitter,T.Normalize,T.ToTensor)
     filtered_transforms = [item for item in transforms_list if not isinstance(item, types_to_remove)]
+    filtered_transforms.append(T.PILToTensor())
     curr_transform = T.Compose(filtered_transforms)
     mask = curr_transform(mask)
     return mask

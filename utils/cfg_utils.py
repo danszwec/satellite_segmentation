@@ -53,13 +53,13 @@ def data_and_trainloop_cfg(config):
     while True:
         new_batch_size = input(f"{Fore.CYAN}Insert the Batch size that you want to use:{Fore.RESET} \n1. 16 \n2. 32 {Fore.YELLOW}(Default){Fore.RESET} \n3. 64 \n4. else: \n")
         if new_batch_size == "1":
-            config['train']['optimizer_name'] = '16'
+            config['train']['batch_size'] = 16
             break
         if new_batch_size == "2":
-            config['train']['optimizer_name'] = '32'
+            config['train']['batch_size'] = 32
             break
         if new_batch_size == "3":
-            config['train']['optimizer_name'] = '64'
+            config['train']['batch_size'] = 64
             break
         if new_batch_size == "4":
             new_batch_user = input(f"{Fore.CYAN}Enter the new batch size: {Fore.RESET}")

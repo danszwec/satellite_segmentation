@@ -56,7 +56,7 @@ def get_accuracy(predictions,masks,desirable_class):
     
     # Ensure the predictions and labels are on the same device
     predictions = predictions.to(masks.device)
-    # Convert predictions to binary (0 or 1) if they are probabilities
+        # Convert predictions to binary (0 or 1) if they are probabilities
     if predictions.dim() > 1 and predictions.size(1) > 1:
         predictions = predictions.argmax(dim=1)
         masks = masks.argmax(dim=1)
@@ -399,7 +399,7 @@ def select_optimizer(model,optimizer_name,lr,weight_decay):
     """
     if optimizer_name == "AdamW":
         optimizer = optim.AdamW(model.parameters(), lr=lr,weight_decay=weight_decay)   
-    return optimizer
+        return optimizer
 def select_transform(config,test_mode = None):
     """
     Select and return image transformations for training and validation based on the given configuration.

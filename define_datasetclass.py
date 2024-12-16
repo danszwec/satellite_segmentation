@@ -25,14 +25,16 @@ class SegmentationDataset(Dataset):
         img_path = os.path.join(self.image_dir, self.image_names[idx])
         mask_path = os.path.join(self.mask_dir, self.image_names[idx])
 
-
-        image = np.array(Image.open(img_path).convert("RGB"))
-        mask = np.array(Image.open(mask_path).convert("L"))
-
+        
+        image = Image.open(img_path).convert("RGB")
+        mask = Image.open(mask_path).convert("L")
+        if "test"  in self.image_dir:
+            image = np.array(image)
+            mask = np.array(mask)
+    
         # Apply transformations
         image,transforms_list = transform_image(image,self.transform)
         mask = transform_mask(mask,transforms_list)
-        
         return image, mask
 
 

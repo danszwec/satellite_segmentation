@@ -1,5 +1,5 @@
 data:
-  dir: /data/landcover_crop/debug
+  dir: /data/landcover_crop/256
   name: landcover
 loss:
   eps: 1.0e-07

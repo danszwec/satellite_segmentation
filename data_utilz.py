@@ -73,7 +73,7 @@ def select_transform(config,test_mode = None):
     
     return train_transform
 
-def load_data(cfg,batch_size,desirable_class,data_dir,test_mode = False):
+def load_data(cfg,desirable_class,batch_size,data_dir,test_mode = False):
     #Select the Augmentation
     train_transform  = select_transform(cfg,test_mode)
 
@@ -93,7 +93,7 @@ def load_data(cfg,batch_size,desirable_class,data_dir,test_mode = False):
         number_class = desirable_class)
 
     #DataLoader
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4,drop_last=False)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4,drop_last=False)
+    train_loader = DataLoader(train_dataset, batch_size, shuffle=True, num_workers=4,drop_last=False)
+    val_loader = DataLoader(val_dataset, batch_size, shuffle=False, num_workers=4,drop_last=False)
 
     return train_loader, val_loader

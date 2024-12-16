@@ -10,7 +10,6 @@ from utilz import *
 from image_handeling import *
 from divide_data import *
 
-
 if __name__ == "__main__":
 
     yaml_file = '/workspace/config.yaml'

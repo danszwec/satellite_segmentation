@@ -4,7 +4,7 @@ from colorama import Fore, Style, init
 from tqdm.auto import tqdm
 from tqdm import tqdm
 import sys
-from data_utiliz import * 
+from data_utilz import * 
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
@@ -98,7 +98,8 @@ def train(cfg): #Pull all the vars from the config file
                     
                     # Forward pass
                     outputs = model(images)[0]
-                    loss = criterion(outputs, masks)
+                    one_hot_mask = channel_class(masks,desirable_class)
+                    loss = criterion(outputs, one_hot_mask)
 
                     # Backward pass and optimization
                     loss.backward()
