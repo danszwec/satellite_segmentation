@@ -241,11 +241,9 @@ def transform_mask(mask,transforms_list):
                                          Otherwise, it will be a PIL image.
 
     Notes:
-        - The function converts the mask to a PIL image if it is not already in that format.
         - Transformations that are typically applied to color images but not to masks (like normalization or color jitter) are removed from the list.
         - The resulting mask is transformed using only the remaining transformations.
     """
-    mask = Image.fromarray(mask)
     types_to_remove = (T.ColorJitter,T.Normalize,T.ToTensor)
     filtered_transforms = [item for item in transforms_list if not isinstance(item, types_to_remove)]
     curr_transform = T.Compose(filtered_transforms)

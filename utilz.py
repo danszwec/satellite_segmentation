@@ -151,7 +151,7 @@ def validate_model(model, val_loader, criterion, device ,desirable_class):
     building_acc = building_acc/len(val_loader.dataset)
     return val_loss ,val_acc
     
-def load_model(model_name,cfg): 
+def load_model(cfg): 
     """""
     Initialize and return a model based on the specified configuration.
 
@@ -164,10 +164,9 @@ def load_model(model_name,cfg):
 
     """
 
-    model = None 
+    model_name = cfg['model']['model_name']
     desirable_class = cfg['train']['desirable_class']
     if model_name == 'DeepLabV3Plus':
-        model_name = cfg['model']['model_name']
         encoder_weights = cfg['model']['encoder_weights']
         encoder_name = cfg['model']['encoder_name']
         activation = cfg['model']['activation']

@@ -26,17 +26,13 @@ class SegmentationDataset(Dataset):
         mask_path = os.path.join(self.mask_dir, self.image_names[idx])
 
 
-        image = Image.open(img_path).convert("RGB")
-        mask = Image.open(mask_path).convert("L")
+        image = np.array(Image.open(img_path).convert("RGB"))
+        mask = np.array(Image.open(mask_path).convert("L"))
 
-        # Apply class reduction and channel class if needed
-        if self.number_class != 7:
-            mask = class_reduction(mask, self.number_class)
-        
         # Apply transformations
         image,transforms_list = transform_image(image,self.transform)
         mask = transform_mask(mask,transforms_list)
-        mask = channel_class(mask, self.number_class)
+        
         return image, mask
 
 

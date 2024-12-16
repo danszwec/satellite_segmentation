@@ -2,10 +2,10 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
-from cvat_convertor import parse_color_file
+# from cvat_convertor import parse_color_file
 
 def predict(model, input):
-    output = model(input)
+    output = model(input)[0]
     output = F.softmax(output, dim=1)
     output = torch.argmax(output, dim=1)
     return output

@@ -74,9 +74,13 @@ def select_transform(config,test_mode = None):
     return train_transform
 
 
-def load_data(cfg,batch_size,desirable_class,data_dir,test_mode = False):
-    #Select the Augmentation
-    train_transform  = select_transform(cfg,test_mode)
+def load_data(cfg,desirable_class,data_dir,batch_size = 1 ,test_mode = False):
+    if test_mode:
+        train_transform = []
+
+    else:
+            #Select the Augmentation
+        train_transform  = select_transform(cfg,test_mode)
 
         
 

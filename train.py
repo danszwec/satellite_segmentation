@@ -66,10 +66,10 @@ def train(cfg): #Pull all the vars from the config file
     save_dir = train_dir(model_name)
     
     # load the data
-    train_loader, val_loader= load_data(cfg,batch_size,desirable_class,data_dir)
+    train_loader, val_loader= load_data(cfg,desirable_class,batch_size,data_dir)
 
     # Initialize the model, loss function, and optimizer
-    model = load_model(model_name,cfg)   
+    model = load_model(cfg)   
     optimizer = select_optimizer(model,optimizer_name,lr,weight_decay)
     criterion = select_loss(criterion_name,data_dir,loss_mode,desirable_class,log_loss,from_logits,smooth,ignore_index,eps)
     
