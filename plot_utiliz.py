@@ -2,111 +2,135 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
+import matplotlib.gridspec as gridspec
 
-def plot_confusion_matrix_with_metrics(resutls, model_path):
+
+def plot_confusion_matrix_with_metrics(results, model_path, metric_path):
     """
     Function to plot the confusion matrix and display evaluation metrics in a fancy style above it.
     
     Parameters:
-    - model_confusion_matrix: The confusion matrix (2D NumPy array) resutls[0]
-    - pixel_accuracy: Pixel accuracy value (float) resutls[1]
-    - iou_micro: IoU (micro) value (float) resutls[2]
-    - iou_weighted: IoU (weighted) value (float)    resutls[3]
-    - lowest_iou: The lowest IoU per class (float) resutls[4]
-    - recall: Recall values per class (NumPy array)     resutls[5]
-    - precision: Precision values per class (NumPy array) resutls[6]
-    - f1_score: F1 score values per class (NumPy array) resutls[7]
+    - results: List containing confusion matrix and metrics
+        - results[0]: Confusion matrix (2D NumPy array)
+        - results[1]: Pixel accuracy (float)
+        - results[2]: IoU (micro) (float)
+        - results[3]: IoU (weighted) (float)
+        - results[4]: Lowest IoU per class (float)
+        - results[5]: Recall values per class (NumPy array)
+        - results[6]: Precision values per class (NumPy array)
+        - results[7]: F1 score values per class (NumPy array)
     - model_path: Path to save the evaluation metrics plot image (string)
     """
+
+    #checkpoint name
+    checkpoint_name = model_path.split('/')[-1]
     # Set the style of the plot
     sns.set(style="whitegrid")
 
     # Create the figure for the confusion matrix
-    plt.figure(figsize=(12, 10))
+    plt.figure(figsize=(12, 12))
 
     # Plot the confusion matrix
-    sns.heatmap(resutls[0]  , annot=True, fmt='d', cmap='Blues', linewidths=0.5, linecolor='gray',
-                cbar_kws={'label': 'Number of Pixels'}, annot_kws={"size": 14, "weight": "bold"})
+    sns.heatmap(results[0], annot=True, fmt='d', cmap='Blues', linewidths=0.5, linecolor='gray',
+                cbar_kws={'label': 'Number of Pixels'}, annot_kws={"size": 8, "weight": "bold"})
 
     # Add title and labels
-    plt.title('Confusion Matrix', fontsize=18, weight='bold')
-    plt.xlabel('Predicted', fontsize=14, weight='bold')
-    plt.ylabel('True', fontsize=14, weight='bold')
+    plt.title('Confusion Matrix', fontsize=16, weight='bold')
+    plt.xlabel('Predicted', fontsize=12, weight='bold')
+    plt.ylabel('True', fontsize=12, weight='bold')
 
     # Prepare the metrics text in a clean format
     metrics_text = f"""
-    Pixel Accuracy:        {resutls[1]:.4f}
-    IoU (Micro):           {resutls[2]:.4f}
-    IoU (Weighted):        {resutls[3]:.4f}
-    Lowest IoU per Class:  {resutls[4]:.4f}
-    Recall:                {resutls[5]:.4f}
-    Precision:             {resutls[6]:.4f}
-    F1 Score:              {resutls[7]:.4f}
+    Pixel Accuracy:        {results[1]:.4f}
+    IoU (Micro):           {results[2]:.4f}
+    IoU (Weighted):        {results[3]:.4f}
+    Lowest IoU per Class:  {results[4]:.4f}
+    Recall:                {results[5]:.4f}
+    Precision:             {results[6]:.4f}
+    F1 Score:              {results[7]:.4f}
     """
-
-    # Add the metrics text above the confusion matrix
-    plt.gcf().text(0.1, 0.85, metrics_text, fontsize=14, weight='bold', color='darkblue', ha='left')
-
-    # Adjust the layout to prevent overlap
-    plt.tight_layout()
+    plt.subplots_adjust(top=0.75)  # Move everything up to give space for the metrics
+    # Add the model name in cyan
+    plt.gcf().text(0.43, 0.95, checkpoint_name, fontsize=15, weight='bold', color='cyan', ha='center')
+     # Adjust the layout and place the text in the middle above the confusion matrix
+    
+    plt.gcf().text(0.43, 0.77, metrics_text, fontsize=14, weight='bold', color='darkblue', ha='center')
 
     # Save the figure
-    plot_path = model_path.replace('.pth', 'evaluation_metrics.png')
-    plt.savefig(plot_path)
-    print(f"Plot saved at: {plot_path}")
+    path = os.path.join(metric_path,checkpoint_name + '_confusion_matrix.png')
+    plt.savefig(path)    
     return  
 
 
 
-def compare_models_performers(models_dict, save_dir):
+def compare_models_performers(models_dict, metric_path):
     """
-    Compare items in the lists of each key in the dictionary and plot all comparisons 
-    in the same figure using subplots. Save the plot in the specified directory.
+    Compare items in the lists of each key in the dictionary and display comparisons
+    in the same bar graph, where each group represents the same index across models.
 
     Parameters:
-    - models_dict: Dictionary where keys are model names/identifiers, and values are lists of items to compare.
-    - save_dir: Directory where the plot will be saved.
+    - models_dict: Dictionary where keys are model names/identifiers, and values are lists of metrics.
     """
     # Ensure the dictionary is not empty
     if not models_dict:
         print("The dictionary is empty!")
         return
     
-    # Get the number of items in each list (assuming all lists are the same length)
-    list_length = len(next(iter(models_dict.values())))
-    
-    # Get the keys (model names)
-    keys = list(models_dict.keys())
-    
-    # Create a figure with subplots
-    fig, axes = plt.subplots(list_length, 1, figsize=(8, 6 * list_length))
-    if list_length == 1:  # If there is only one item to compare, axes will not be an array
-        axes = [axes]
-    
-    # Iterate over each index (item position) in the lists
-    for i in range(list_length):
-        # Collect values from each key's list at the current index
-        values = [models_dict[key][i] for key in keys]
-        
-        # Plot the comparison as a bar graph in the corresponding subplot
-        axes[i].bar(keys, values, color='skyblue')
-        
-        # Add title and labels to each subplot
-        axes[i].set_title(f'Comparison of Item {i+1} Across Models', fontsize=14)
-        axes[i].set_xlabel('Models', fontsize=12)
-        axes[i].set_ylabel(f'Value of Item {i+1}', fontsize=12)
+    # for each value delete the first element
+    for key in models_dict:
+        models_dict[key] = models_dict[key][1:]
 
-    # Adjust layout for better spacing between subplots
+    # Validate that all lists in the dictionary are of the same length
+    list_lengths = [len(v) for v in models_dict.values()]
+    if len(set(list_lengths)) != 1:
+        print("Error: All lists in the dictionary must have the same length.")
+        return
+    
+    metrics_names = ['Pixel Accuracy', 'IoU (Micro)', 'IoU (Weighted)', 'Lowest IoU per Class', 'Recall', 'Precision', 'F1 Score','average time']
+
+
+    # Extract data 
+    model_names = [key.split('/')[-1] for key in models_dict.keys()]  # Extract the model names
+
+
+    metrics = np.array(list(models_dict.values()))  # Convert to a NumPy array for easier slicing
+    
+     # Set up GridSpec for custom layout
+    fig = plt.figure(figsize=(25,14))  # Adjust figure size
+    gs = gridspec.GridSpec(2, 4, figure=fig)  # 2 rows, 4 columns grid
+    
+    # Create axes
+    axes = []
+    for i in range(4):  # Top row (4 axes)
+        axes.append(fig.add_subplot(gs[0, i]))
+    for i in range(4):  # Bottom row (3 axes)
+        axes.append(fig.add_subplot(gs[1, i]))
+
+#     # Create a bar graph for each metric
+#    # Plot the first metric in a separate axis
+#     axes[0].bar(model_names, [metric[0] for metric in metrics], color='skyblue', alpha=0.8)
+#     axes[0].set_title(metrics_names[0], fontsize=14)
+#     axes[0].set_ylabel(f'Metric {1} Value', fontsize=12)
+#     axes[0].set_xlabel('Models', fontsize=12)
+#     axes[0].tick_params(axis='x', rotation=45,labelsize=10)
+    
+    # Plot the remaining metrics
+    for i in range(len(metrics_names)):
+        axes[i].bar(model_names, [metric[i] for metric in metrics], color='skyblue', alpha=0.8)
+        axes[i].set_title(metrics_names[i], fontsize=10)
+        axes[i].set_ylabel(f'Metric {i} Value', fontsize=7)
+        axes[i].set_xlabel('Models', fontsize=6)
+        axes[i].tick_params(axis='x', rotation=45,labelsize=10)
+
+    # Adjust layout with more space between the rows
+    plt.subplots_adjust(bottom=0.15, hspace=0.6, wspace=0.4)  # Increase hspace for vertical spacing
+    
+    # Adjust layout for better spacing
     plt.tight_layout()
+    plt.show()
 
-    # Ensure the save directory exists
-    os.makedirs(save_dir, exist_ok=True)
-    
-    # Save the plot
-    plot_path = os.path.join(save_dir, 'comparison_plot.png')
-    plt.savefig(plot_path)
-    
-    # Optionally, print the save path for reference
-    print(f"Plot saved at: {plot_path}")
+    # Save the figure
+    path = os.path.join(metric_path, 'models_comparison.png')
+    plt.savefig(path)
     return
 
