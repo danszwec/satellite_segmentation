@@ -30,9 +30,10 @@ if __name__ == "__main__":
                     print_sum(cfg)
                 if default_cfg == "n":
                     cfg = update_cfg(cfg)  
-                train(cfg)                                                          # Start the train
+                # Start the train
+                checkpoints_dir = train(cfg)                                                          # Start the train
                 print(f"{Fore.GREEN}Training has been completed successfully.{Fore.RESET}\n{Fore.RED}Starting to evaluate the model..{Fore.RESET}")
-                test_evaluation(train_dir,model,cfg)                               # evaluate the model weights by graphs parameters
+                test_evaluation(checkpoints_dir,model,cfg)                                # evaluate the model weights by graphs parameters
                 print(f"{Fore.GREEN}Evaluation has been completed successfully.{Fore.RESET}")
                 save_yaml = input(f"{Fore.CYAN}Do you want to save the current configuration?{Fore.RESET} \nY/n\n")
                 if save_yaml == "Y":

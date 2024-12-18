@@ -58,13 +58,14 @@ def train(cfg): #Pull all the vars from the config file
     activation = cfg['model']['activation']
     pooling = cfg['model']['pooling']
     dropout = cfg['model']['dropout']
+
 ####################################################################################
 
-
-    
     # Create a directory for the train
     save_dir = train_dir(model_name)
-    
+    checkpoints_dir = os.path.join(save_dir,'checkpoint')
+    os.makedirs(checkpoints_dir, exist_ok=True)
+
     # load the data
     train_loader, val_loader= load_data(cfg,desirable_class,batch_size,data_dir)
 
@@ -87,8 +88,7 @@ def train(cfg): #Pull all the vars from the config file
             loss_val = 0
             acc_val = 0    
             with tqdm(total=num_iter, desc="batch Progress",ncols=100  , unit='iter',bar_format=bar_format1) as iter_bar:
-                # batch_accuracy =[]
-                # batch_losses = []
+                # Training step
                 model.train()
                 acc_train= 0 
                 batch_loss = 0.0
@@ -96,9 +96,9 @@ def train(cfg): #Pull all the vars from the config file
                     torch.cuda.empty_cache()    
                     images, masks = images.to(device), masks.to(device)                    
                     
-                    # Forward pass
+                    # Forward pass1
                     outputs = model(images)[0]
-                    one_hot_mask = channel_class(masks,desirable_class)
+                    one_hot_mask = one_hot(masks,desirable_class)
                     loss = criterion(outputs, one_hot_mask)
 
                     # Backward pass and optimization
@@ -108,13 +108,10 @@ def train(cfg): #Pull all the vars from the config file
 
                     # Calculate accuracy and loss of iter
                     item_accuracy = get_accuracy(outputs,masks,desirable_class)
-                    # batch_accuracy.append(item_accuracy)
-                    # batch_losses.append(loss.item())
                     
                     # Calculate accuracy and lose of epoch
                     batch_loss += loss.item() * images.size(0) # multiply batch loss by the size batch
                     acc_train += item_accuracy*images.size(0) # same as the loss
-                    # batch_losses.append(batch_loss)
                     iter_bar.update(1) #update
 
             # Calculate the loss and accuracy of the epoch
@@ -128,6 +125,8 @@ def train(cfg): #Pull all the vars from the config file
                 for images, masks in val_loader:
                     images, masks = images.to(device), masks.to(device)
                     outputs = model(images)[0]
+                    masks = one_hot(masks,desirable_class)
+                    
                     # Calculate accuracy and loss of the validation
                     loss = criterion(outputs, masks)
                     loss_val += loss.item() * images.size(0)
@@ -149,12 +148,12 @@ def train(cfg): #Pull all the vars from the config file
             # Save the model
             if epoch % 10 == 0:
                 # Save the model
-                torch.save(model.state_dict(),os.path.join(save_dir,'checkpoint'))
+                torch.save(model.state_dict(),os.path.join(checkpoints_dir,f'{model_name}_epoch_{epoch}.pth'))
 
                 # if the training is converged , stop the training
                 if check_convergence(train_losses,val_losses,back_epochs,epslion):
                     break
-    return 
+    return checkpoints_dir
 
 if __name__ == "__main__":
     yaml_file = '/workspace/config.yaml'

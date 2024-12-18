@@ -38,8 +38,6 @@ class SegmentationDataset(Dataset):
         return image, mask
 
 
-
-
 if __name__ == "__main__":
     with open('/home/oury/Documents/Segmentation_Project/config.yaml', 'rt') as f:
         cfg = yaml.safe_load(f.read())

@@ -167,7 +167,10 @@ def class_reduction(mask,new_class):
     return mask
 
 
-def channel_class(mask,desirable_class):
+
+
+
+def one_hot(masks,desirable_class):
     """
     Converts a segmentation mask with class labels into a one-hot encoded tensor with a specified number of classes.
 
@@ -178,12 +181,20 @@ def channel_class(mask,desirable_class):
     Returns:
         torch.Tensor: A 4D tensor representing the one-hot encoded mask, with dimensions [batch_size, num_classes, height, width].
     """
-    mask = mask.squeeze(1)  # Remove the channel dimension: [32, 256, 256]
-    
-    # Generate one-hot encoding by comparing each pixel value to class indices
-    one_hot_mask = (mask.unsqueeze(1) == torch.arange(desirable_class, device=mask.device).view(1, -1, 1, 1)).float()
-    
-    return one_hot_mask
+    # Ensure the mask is of type Long for one-hot encoding
+    masks = masks.long()  # [batch_size, 1, H, W]
+
+    # Remove the channel dimension
+    masks = masks.squeeze(1)  # [batch_size, H, W]
+
+    # Apply one-hot encoding
+    one_hot = torch.nn.functional.one_hot(masks, num_classes=desirable_class)  # [batch_size, H, W, num_classes]
+
+    # Convert to float and rearrange dimensions to [batch_size, num_classes, H, W]
+    one_hot = one_hot.permute(0, 3, 1, 2).float()
+
+    return one_hot
+
 
 def transform_image(image,lst):
     """
