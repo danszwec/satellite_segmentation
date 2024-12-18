@@ -11,8 +11,13 @@ from utils.plot_utils import *
 from utils.train_utlis import *
 
 
+from inference import *
+
+
 
 if __name__ == "__main__":
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     yaml_file = '/workspace/config.yaml'
     cfg = load_yaml(yaml_file)
@@ -32,6 +37,7 @@ if __name__ == "__main__":
                     print_sum(cfg)
                 if default_cfg == "n":
                     cfg = update_cfg(cfg)  
+
                 # Start the train
                 checkpoints_dir = train(cfg)                                                          # Start the train
                 print(f"{Fore.GREEN}Training has been completed successfully.{Fore.RESET}\n{Fore.RED}Starting to evaluate the model..{Fore.RESET}")
@@ -71,15 +77,46 @@ if __name__ == "__main__":
             if menu_ch == "3":         
                 print(f"{Fore.GREEN}Welcome to the pre-trained model inference environment.{Fore.RESET}")
                 print(f"{Fore.RED}Be aware that the weights must match the relevant architecture.{Fore.RESET}")
-                model_name = input(f"{Fore.CYAN}Enter the model name that you want to use:{Fore.RESET} \n1. Deep Lab V3+ {Fore.YELLOW}(Default){Fore.RESET} \n2. UNet \n3. PSPNet \n4. Unet++ \n")
-                model = load_model(model_name,cfg)
+                while True:
+                    model_name = input(f"{Fore.CYAN}Enter the model name that you want to use:{Fore.RESET} \n1. Deep Lab V3+ {Fore.YELLOW}(Default){Fore.RESET} \n2. UNet \n3. PSPNet \n4. Unet++ \n")
+                    if model_name == "1":
+                        cfg['model']['model_name'] = 'DeepLabV3Plus'
+                        break
+                    if model_name == "2":
+                        cfg['model']['model_name'] = 'UNet'
+                        break
+                    if model_name == "3":
+                        cfg['model']['model_name'] = 'PSPNet'
+                        break
+                    if model_name == "4":
+                        cfg['model']['model_name'] = 'UnetPlusPlus'
+                        break
+                    else:
+                        print(f"{Fore.RED} Invalid input. Please try again.{Fore.RESET}\n")
+                
+                model = load_model(cfg)
+                model.to(device)
                 weight_path = input(f"{Fore.CYAN}Enter the weights path that you want to use:{Fore.RESET} \n")
                 model.load_state_dict(torch.load(weight_path))
+                model.eval()
                 pred_image = input(f"{Fore.CYAN}Enter the image path that you want to predict:{Fore.RESET} \n")
                 temp_dir, original_size = split_image(pred_image)
-                for image in temp_dir:
-                    rgb_mask = grey_to_rgb_mask(model,image)                              # Predict the image
-                    image = add_mask(image,rgb_mask)
+                image_list = [os.path.join(temp_dir, item) for item in os.listdir(temp_dir) if os.path.isfile(os.path.join(temp_dir, item))]
+                for image in image_list:
+                    image = Image.open(image).convert("RGB")
+
+                    preprocess = transforms.Compose([
+                        transforms.Resize((256, 256)),
+                        transforms.ToTensor(),
+                        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=cfg[0.229, 0.224, 0.225]),
+                    ])
+
+                    image_tensor = preprocess(image)
+                    image_tensor = image_tensor.unsqueeze(0).to(device)
+                    with torch.no_grad():
+                        rgb_mask = grey_to_rgb_mask(model,image_tensor)                              # Predict the image
+                        image = add_mask(image_tensor,rgb_mask)
+                        
                 rebuilt_image_path = rebuild_image(temp_dir, original_size, pred_image)   # Rebuild the image
                 print(f"{Fore.GREEN}The prediction has been completed successfully. \nYou can find the prediction in the image path.{Fore.RESET}\n")
                 continue
