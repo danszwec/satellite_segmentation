@@ -1,22 +1,19 @@
 import torch
 import os
-import torch.nn.functional as F
-import segmentation_models_pytorch as smp
 import time
-from define_datasetclass import SegmentationDataset
 from train import *
 import segmentation_models_pytorch as smp
 torch.backends.cudnn.benchmark = False
-from utils import *
-from pred_utiliz import *
+from utils.train_utlis import *
+from utils.data_utils import *
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 from sklearn.metrics import jaccard_score , confusion_matrix
-from plot_utiliz import *
+from utils.plot_utils import *
 
 
 
 #test data
-def test_evaluation(train_dir,model,cfg):
+def test_evaluation(train_dir,cfg):
         #config
         data_dir = cfg['data']['dir']
         desirable_class = cfg['train']['desirable_class']
@@ -28,9 +25,10 @@ def test_evaluation(train_dir,model,cfg):
         labels = [i for i in range(desirable_class)]
         
        #load checkpoints models
+        model = load_model(cfg)
         models_list = [os.path.join(train_dir, item) for item in os.listdir(train_dir) if os.path.isfile(os.path.join(train_dir, item))]
         models_dict = {item: [] for item in models_list}        #load test data
-        _, test_loader = load_data(cfg,desirable_class,data_dir,1,test_mode = True)
+        _, test_loader = load_data(cfg,desirable_class,1,data_dir,test_mode = True)
 
        
         for model_path in models_list:
@@ -103,7 +101,7 @@ def test_evaluation(train_dir,model,cfg):
         
         #compare between models
         compare_models_performers(models_dict, metric_path)
-
+        return
 
 
 

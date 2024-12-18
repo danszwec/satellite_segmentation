@@ -5,10 +5,12 @@ from testEvaluation import test_evaluation
 from utils import *
 import yaml
 from utils.cfg_utils import *
-from pred_utiliz import *
-from utilz import *
-from image_handeling import *
-from divide_data import *
+from utils.data_utils import *
+from utils.image_utils import *
+from utils.plot_utils import *
+from utils.train_utlis import *
+
+
 
 if __name__ == "__main__":
 
@@ -33,7 +35,7 @@ if __name__ == "__main__":
                 # Start the train
                 checkpoints_dir = train(cfg)                                                          # Start the train
                 print(f"{Fore.GREEN}Training has been completed successfully.{Fore.RESET}\n{Fore.RED}Starting to evaluate the model..{Fore.RESET}")
-                test_evaluation(checkpoints_dir,model,cfg)                                # evaluate the model weights by graphs parameters
+                test_evaluation(checkpoints_dir,cfg)                                # evaluate the model weights by graphs parameters
                 print(f"{Fore.GREEN}Evaluation has been completed successfully.{Fore.RESET}")
                 save_yaml = input(f"{Fore.CYAN}Do you want to save the current configuration?{Fore.RESET} \nY/n\n")
                 if save_yaml == "Y":

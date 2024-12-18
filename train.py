@@ -4,15 +4,9 @@ from colorama import Fore, Style, init
 from tqdm.auto import tqdm
 from tqdm import tqdm
 import sys
-from data_utilz import * 
+from utils.data_utils import * 
 import torch
-import torch.nn.functional as F
-from torch.utils.data import DataLoader
-from define_datasetclass import SegmentationDataset 
-import matplotlib.pyplot as plt
-from utilz import *
-from utils.loss_utils import *
-from image_utils import image_vs_mask
+from utils.train_utlis import *
 torch.backends.cudnn.enabled = False
 from datetime import datetime
 import yaml

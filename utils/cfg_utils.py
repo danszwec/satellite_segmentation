@@ -63,7 +63,7 @@ def data_and_trainloop_cfg(config):
             break
         if new_batch_size == "4":
             new_batch_user = input(f"{Fore.CYAN}Enter the new batch size: {Fore.RESET}")
-            config['train']['batch_size'] = new_batch_user
+            config['train']['batch_size'] = int(new_batch_user)
             break
         else:
             print(f"{Fore.RED}Invalid input.{Fore.RESET}")
@@ -81,7 +81,7 @@ def data_and_trainloop_cfg(config):
             break
         if new_epochs == "4":
             new_epochs_user = input(f"{Fore.CYAN}Enter the new number of epochs: {Fore.RESET}")
-            config['train']['num_epochs'] = new_epochs_user
+            config['train']['num_epochs'] = int(new_epochs_user)
             break
         else:
             print(f"{Fore.RED}Invalid input.{Fore.RESET}")
