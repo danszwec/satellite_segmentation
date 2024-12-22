@@ -22,7 +22,7 @@ While the project structure is modular and can accommodate different architectur
 - [Usage](#usage)
   - [Config file](#config-file)
   - [How to use main.py](#how-to-use-main)
-  - [Inference - check the model weights on an image](#inference)
+  - [How to use "Inference" - Check the model weights on an image](#how-to-use-inference)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
 ## Getting Started: Important Requirements and Labeling
@@ -163,7 +163,23 @@ There are two options for modifying the config.yaml file:
 
 After finalizing all configurations, you will see a summary of the selected settings, and the training loop will begin automatically.
 
-### Inference
+### How to use Inference
+**In inference.py - Follow the prompts on-screen to ensure a smooth workflow.**
+
+1. **Launch the Script:** Run the script from your terminal or command line interface.
+2. **Welcome Screen:**
+   - You will be presented with a welcome screen.
+   - Select 3 to apply an existing model for image segmentation.
+3. **Inference Workflow Environment:**
+   - You will enter the Pre-Trained Model Inference workflow environment.
+   - Choose the architecture you want to evaluate.
+   - Enter the path to the model weights you wish to use.
+   - Provide the path to the image you want to segment.
+
+After completing these steps, the script will generate two files in the same directory as the input image:
+1. The segmented image
+2. An .xml file with the segmented poligons (a Vector map)
+   
 ברגע שסיימנו לבנות את האינפרנס וראינו שהוא רץ - להראות איך מפעילים את האינפרנס!
 
 
