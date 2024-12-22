@@ -113,7 +113,7 @@ Learning Rate: Adjust the learning rate for optimal training speed and stability
 Batch Size: Modify the batch size to suit your GPU memory capacity.
 Epochs: Set the number of epochs based on the size of your dataset and training goals.
 Make sure the settings align with your hardware capabilities and dataset size for efficient training.
-<br>
+
 There are two options for modifying the config.yaml file:
 1. Go to the config.yaml file, change the settings, and save it (this will become your default configuration).
 2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
