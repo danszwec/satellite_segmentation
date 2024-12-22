@@ -17,8 +17,8 @@ While the project structure is modular and can accommodate different architectur
 ## Table of Contents
 - [Getting Started: Important Requirements and Labeling, Project Directory Structure](#getting-started-important-requirements-and-labeling)
 - [Data Organization and Optional Dataset](#data-organization-and-optional-dataset)
-- [Installations](#installations).
-- [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers).
+- [Installations](#installations)
+- [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
@@ -117,6 +117,7 @@ The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW
 
 
 
+![image](https://github.com/user-attachments/assets/1e966d09-4134-4e56-b566-df9eb56a0c76)
 
 
 
