@@ -17,10 +17,10 @@ While the project structure is modular and can accommodate different architectur
 ## Table of Contents
 - [Getting Started: Important Requirements and Labeling, Project Directory Structure](#getting-started-important-requirements-and-labeling)
 - [Data Organization and Optional Dataset](#data-organization-and-optional-dataset)
-- Installation
-- Model Architecture
-- Usage
-- Pre-trained Model Results
+- [Installations](#installations).
+- [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers).
+- [Usage](#usage)
+- [Pre-trained Model Results](#pre-trained-model-results)
 
 ## Getting Started: Important Requirements and Labeling
 - Ensure that the images and masks is organized and as written in "Data organinzation and Optional Dataset".
@@ -65,44 +65,40 @@ The dataset should be organized in the following structure:
 place here the optional dataset that we work with.
 * להעלות לפה את הקישור של הדאטה סט הזה, ולכתוב שזה צריך לעבור שינוי ל-256 קרופים.
 
-## Installation:
+## Installations:
 **still need to update!!!!! download a docker**
 * אי אפשר להעלות לגיט קובץ ענק של 6 ג'יגה אז אי אפשר להעלות לפה דוקר שלם (אפשר לעשות את זה בשביל המחשב שלנו)
 *  לשים פה קישור לדוקר פייל
 * להכין קובץ ריקוויירמנטס בשביל כל הפרוייקט
 
-## Model Architecture
+## Model Selection, Loss Functions, and Optimizers
+### Model Architecture
+This project offers several segmentation models:
+* DeepLabV3+: Uses atrous convolution and a decoder for precise boundary segmentation.
+* UNet: Classic encoder-decoder model with skip connections, effective for medical image tasks.
+* PSPNet: Uses pyramid pooling for multi-scale context and improved scene understanding.
+* UNet++: Extends UNet with nested skip pathways for better feature fusion and accuracy.
+
+### Loss Functions
+Available loss functions include:
+* Dice Loss: Optimizes for overlap between predicted and ground truth.
+* BCEWithLogitsLoss: Combines binary cross-entropy with a sigmoid layer.
+* Jaccard Loss: Focuses on maximizing intersection-over-union (IoU).
+* Focal Loss: Down-weights well-classified examples to focus on hard ones.
+
+### Optimizers
+Choose from the following optimizers:
+* AdamW: Optimizer with weight decay, ideal for most tasks.
+* Adam: Adaptive optimization combining RMSProp and momentum.
+* SGD: Classic optimizer, effective for fine-tuning.
+
+### Default Configuration
+The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW** optimizer, offering a good balance for general segmentation tasks.
 
 
-## Table of Contents
-- [Getting Started](#getting-started)
-- [Installation Guide](#installation-guide)
-- [How to Use](#how-to-use)
+## Usage
 
-## Installation Guide
-Content here...
-
-## How to Use
-Content here...
-For more complex cases:
-markdownCopy# My Project
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Complex Setup Steps](#complex-setup-steps)
-  - [Step 1: Basic Setup](#step-1-basic-setup)
-  - [Step 2: Advanced Config](#step-2-advanced-config)
-
-### Step 1: Basic Setup
-Content here...
-
-### Step 2: Advanced Config
-Content here...
-
-
-
-
-
+## Pre-trained Model Results
 
 
 
