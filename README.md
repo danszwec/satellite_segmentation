@@ -21,7 +21,7 @@ While the project structure is modular and can accommodate different architectur
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
   - [Config file](#config.yaml-file)
-  - 
+  - [How to use main.py](#how-to-use-main.py)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
 ## Getting Started: Important Requirements and Labeling
@@ -100,7 +100,7 @@ The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW
 
 ## Usage
 
-### config.yaml File:
+### config.yaml File
 The config.yaml file contains all the essential settings for configuring your training process. By modifying these settings, you can fine-tune the training process to suit your dataset and desired outcomes.
 
 **Key Settings to Modify for Effective Training**
@@ -111,6 +111,7 @@ Before running the test, you can adjust the following parameters in the config.y
 - Learning Rate: Adjust the learning rate for optimal training speed and stability.
 - Batch Size: Modify the batch size to suit your GPU memory capacity.
 - Epochs: Set the number of epochs based on the size of your dataset and training goals.
+
 **Make sure the settings align with your hardware capabilities and dataset size for efficient training.**
 
 There are two options for modifying the config.yaml file:
