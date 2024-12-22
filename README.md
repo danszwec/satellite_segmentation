@@ -5,6 +5,7 @@ This project focuses on semantic segmentation of aerial/satellite imagery for la
 
 <details open>
   <summary><strong>Pre-trained project:</strong></summary>
+<br>
 While the project structure is modular and can accommodate different architectures and datasets, this specific implementation includes:
 - A trained model using the **DeepLabV3+** architecture
 - Training performed on a land cover dataset (included in the repository)
