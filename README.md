@@ -126,6 +126,8 @@ There are two options for modifying the config.yaml file:
 2. **Welcome Screen:**
    - You will be presented with a welcome screen.
    - Select 1 to initiate the model training process.
+![image](https://github.com/user-attachments/assets/6453ad70-6760-41b7-887f-12f24a34e6a7)
+
 3. **Training Workflow Environment:**
    - You will enter the training workflow environment.
    - Choose whether to use the default pre-trained configuration:
