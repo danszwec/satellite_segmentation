@@ -4,7 +4,7 @@
 This project focuses on semantic segmentation of aerial/satellite imagery for land cover classification. The model processes RGB satellite images (256x256x3) in PNG format to identify and segment different land cover features. The project evaluates various deep learning architectures (such as **DeepLabV3+**, **UNet**, etc.) to determine the most effective approach for high-resolution satellite image segmentation, with applications in urban, forest, water and other terrain features detection.
 
 <details open>
-  <summary><strong>Pre-trained project:</strong></summary>
+  <summary><strong>Pre-trained project details:</strong></summary>
 <br>
 While the project structure is modular and can accommodate different architectures and datasets, this specific implementation includes:
   
@@ -15,24 +15,26 @@ While the project structure is modular and can accommodate different architectur
 </details>
 
 ## Table of Contents
-- Getting Started: Important Requirements and Labeling, Peoject Directory Structure.
+- [Getting Started: Important Requirements and Labeling, Peoject Directory Structure.](#Getting-Started:-Important-Requirements-and-Labeling)
 - Data Organization and Optional Dataset
 - Installation
 - Model Architecture
 - Usage
 - Pre-trained Model Results
-- Acknowledgments
 
-## Important Requirements and Labeling
-- Ensure that each image in the `images` folder has a corresponding mask in the `masks` folder.                 (- Ensure that the images is organized as written in "Data organinzation and Optional Dataset" to make your run easier)
-- All images and masks should be of the same resolution (e.g., **256x256** or **512x512**).
-- Images should be in formats such as **PNG** or **JPEG**, and masks should be grayscale images where each pixel corresponds to a class label (e.g., 0 for background, 1 for urban, 2 for forest, etc.).
+## Getting Started: Important Requirements and Labeling
+- Ensure that the images and masks is organized and as written in "Data organinzation and Optional Dataset".
+- Ensure that eace image has a corresponding mask
+- All images and masks should be of the same resolution (e.g., **256x256**).
+- Images should be in formats such as **PNG** or **JPEG**, and masks should be **grayscale** images where each pixel corresponds to a class label (e.g., 0 for background, 1 for urban, 2 for forest, etc.).
+- **If you want to tag images for this semantic segmentation project, please visit [The CVAT Labeling Infrastructure Guide](https://github.com/danszwec/segmentation-labeling-Toolkit), where you'll find instructions on how to tag and save the images.**
 
 ### Project Directory Structure:
 To set up the project environment:
 1. Clone the repository to your desired location:
 ```bash
-git clone <repository-url>
+git clone https://github.com/danszwec/satellite_segmentation
+cd satellite_segmentation
 ```
 2. Navigate to your project directory and ensure it has the following structure:
 ```
@@ -59,80 +61,73 @@ The dataset should be organized in the following structure:
 5. **`Dataset_dir/test/images/`**: Place your test images here.
 6. **`Dataset_dir/test/masks/`**: Place the corresponding ground truth masks for test images here.
 
-**Requirements:**
-- All images must be in 512x512 resolution, RGB format, and saved as PNG/JPEG files
-- Each image MUST have a corresponding mask file. All masks must match the image resolution and be single-channel
-- Each pixel in the mask represents an integer value for a specific class label (e.g., 0 for background, 1 for urban, etc.)
-
 ### Optional Dataset
 place here the optional dataset that we work with.
+* להעלות לפה את הקישור של הדאטה סט הזה, ולכתוב שזה צריך לעבור שינוי ל-256 קרופים.
+
+## Installation:
+**still need to update!!!!! download a docker**
+* אי אפשר להעלות לגיט קובץ ענק של 6 ג'יגה אז אי אפשר להעלות לפה דוקר שלם (אפשר לעשות את זה בשביל המחשב שלנו)
+*  לשים פה קישור לדוקר פייל
+* להכין קובץ ריקוויירמנטס בשביל כל הפרוייקט
+
+## Model Architecture
+
+
+## Table of Contents
+- [Getting Started](#getting-started)
+- [Installation Guide](#installation-guide)
+- [How to Use](#how-to-use)
+
+## Getting Started
+Content here...
+
+## Installation Guide
+Content here...
+
+## How to Use
+Content here...
+For more complex cases:
+markdownCopy# My Project
+
+## Table of Contents
+- [Introduction](#introduction)
+- [Complex Setup Steps](#complex-setup-steps)
+  - [Step 1: Basic Setup](#step-1-basic-setup)
+  - [Step 2: Advanced Config](#step-2-advanced-config)
+
+### Step 1: Basic Setup
+Content here...
+
+### Step 2: Advanced Config
+Content here...
 
 
 
 
 
-Installation
-bashCopy# Clone the repository
-git clone [YOUR_REPOSITORY_URL]
-
-# Install dependencies
-pip install -r requirements.txt
-Dataset
-[Please provide information about:]
-
-Dataset source
-Number of images
-Classes/features being segmented
-Data split (train/validation/test)
-Image specifications:
-
-Resolution: 512x512
-Channels: 3 (RGB)
-Format: PNG
 
 
 
-Model Architecture
-[Please specify:]
 
-Base architecture: DeepLabV3+
-Optimizer: AdamW
-Loss function: Dice Loss
-Any modifications made
-Number of layers
-Training hyperparameters
 
-Usage
-Training
-pythonCopy# Example training command
-python train.py --data_path /path/to/dataset --epochs 100
-Inference
-pythonCopy# Example inference command
-python predict.py --image_path /path/to/image.png --model_path /path/to/saved_model
-Pre-trained Model Results
-[Please provide:]
 
-Performance metrics of the pre-trained model
-Validation/test set results
-Sample segmentation outputs
-Training convergence graphs
-Comparison with baseline models (if applicable)
 
-Contributing
 
-Fork the repository
-Create your feature branch (git checkout -b feature/AmazingFeature)
-Commit your changes (git commit -m 'Add some AmazingFeature')
-Push to the branch (git push origin feature/AmazingFeature)
-Open a Pull Request
 
-License
-[Please specify the license type]
-Contact
-[Your contact information or preferred method of contact]
-Acknowledgments
 
-[List any acknowledgments, papers referenced, or tools used]
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -155,63 +150,6 @@ Acknowledgments
 
 להסביר על תיקיית היוטילז ועל החלוקה של התיקייה בפנים (ל-מיין, לטריין, לדאטהסט פרפייר, לאוולואציה..)
 אם יש עוד- לכתוב. (רק ראשי פרקים: התיקייה יוטילז מכילה תתי תיקיות של.. כל אחת מהן מכילה פונקציות של....)
-
-
-
-
-
-
-
-
-
-<details open>
-  <summary><strong>Installation</strong></summary>
-
-* python >= 3.6
-* torch >= 1.8.1
-* torchvision >= 0.9.1
-
-Then, clone the repo and install the project with:
-
-```bash
-$ git clone https://github.com/sithu31296/semantic-segmentation
-$ cd semantic-segmentation
-$ pip install -e .
-```
-
-</details>
-
-<br>
-<details>
-  <summary><strong>Configuration</strong> (click to expand)</summary>
-
-Create a configuration file in `configs`. Sample configuration for ADE20K dataset can be found [here](configs/ade20k.yaml). Then edit the fields you think if it is needed. This configuration file is needed for all of training, evaluation and prediction scripts.
-
-</details>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
