@@ -130,6 +130,7 @@ There are two options for modifying the config.yaml file:
    - Choose whether to use the default pre-trained configuration:
      - Y: Load the default configuration.
      - n: Enter the configuration update screen.
+
 **Configuration Options:** In the configuration update screen, customize the following:
 - Architecture: Select from the following options:
   * DeepLabV3+
