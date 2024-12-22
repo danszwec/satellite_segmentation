@@ -1,4 +1,4 @@
-# Satellite Image Semantic Segmentation
+# <div align="center">Satellite Image Semantic Segmentation</div>
 
 ## Project Overview
 This project focuses on semantic segmentation of aerial/satellite imagery for land cover classification. The model processes RGB satellite images (512x512x3) in PNG format to identify and segment different land cover features. The project evaluates various deep learning architectures (such as **DeepLabV3+**, **UNet**, etc.) to determine the most effective approach for high-resolution satellite image segmentation, with applications in urban, forest, water and other terrain features detection.
@@ -159,7 +159,30 @@ Acknowledgments
 
 
 
+<details open>
+  <summary><strong>Installation</strong></summary>
 
+* python >= 3.6
+* torch >= 1.8.1
+* torchvision >= 0.9.1
+
+Then, clone the repo and install the project with:
+
+```bash
+$ git clone https://github.com/sithu31296/semantic-segmentation
+$ cd semantic-segmentation
+$ pip install -e .
+```
+
+</details>
+
+<br>
+<details>
+  <summary><strong>Configuration</strong> (click to expand)</summary>
+
+Create a configuration file in `configs`. Sample configuration for ADE20K dataset can be found [here](configs/ade20k.yaml). Then edit the fields you think if it is needed. This configuration file is needed for all of training, evaluation and prediction scripts.
+
+</details>
 
 
 
