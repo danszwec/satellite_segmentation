@@ -105,18 +105,58 @@ The config.yaml file contains all the essential settings for configuring your tr
 
 **Key Settings to Modify for Effective Training**
 Before running the test, you can adjust the following parameters in the config.yaml to optimize your training:
-
-Model: Choose the architecture (e.g., DeepLabV3+, UNet, etc.).
-Loss Function: Select a suitable loss function (e.g., BCEWithLogitsLoss, Dice Loss).
-Optimizer: Choose between AdamW, Adam, or SGD.
-Learning Rate: Adjust the learning rate for optimal training speed and stability.
-Batch Size: Modify the batch size to suit your GPU memory capacity.
-Epochs: Set the number of epochs based on the size of your dataset and training goals.
-Make sure the settings align with your hardware capabilities and dataset size for efficient training.
+- Model: Choose the architecture (e.g., DeepLabV3+, UNet, etc.).
+- Loss Function: Select a suitable loss function (e.g., BCEWithLogitsLoss, Dice Loss).
+- Optimizer: Choose between AdamW, Adam, or SGD.
+- Learning Rate: Adjust the learning rate for optimal training speed and stability.
+- Batch Size: Modify the batch size to suit your GPU memory capacity.
+- Epochs: Set the number of epochs based on the size of your dataset and training goals.
+**Make sure the settings align with your hardware capabilities and dataset size for efficient training.**
 
 There are two options for modifying the config.yaml file:
 1. Go to the config.yaml file, change the settings, and save it (this will become your default configuration).
 2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
+
+### How to use main.py
+**Follow the prompts on-screen to ensure a smooth workflow.**
+
+1. **Launch the Script:** Run the script from your terminal or command line interface.
+2. **Welcome Screen:**
+   - You will be presented with a welcome screen.
+   - Select 1 to initiate the model training process.
+3. **Training Workflow Environment:**
+   - You will enter the training workflow environment.
+   - Choose whether to use the default pre-trained configuration:
+     - Y: Load the default configuration.
+     - n: Enter the configuration update screen.
+       **Configuration Options:** In the configuration update screen, customize the following:
+       Architecture: Select from the following options:
+       * DeepLabV3+
+       * Unet
+       * PSPNet
+       * Unet++
+       Loss Function: Choose one of the following:
+       * Dice Loss
+       * BCE With Logits Loss
+       * Jaccard Loss
+       * Focal Loss
+       Optimizer: Select an optimizer:
+       * AdamW
+       * Adam
+       * SGD
+       Weight Decay: Choose a weight decay value:
+       * 0.001
+       * 0.0001
+       * 0.00001
+4. **Dataset Configuration:**
+   - You will be asked if you want to change the dataset:
+     - Y: Specify the path to your dataset and provide a name.
+     - n: Continue using the current dataset.
+5. **Additional Settings:**
+   - Choose the batch size for training.
+   - Specify the number of epochs.
+
+After finalizing all configurations, you will see a summary of the selected settings, and the training loop will begin automatically.
 
 ## Pre-trained Model Results
 
