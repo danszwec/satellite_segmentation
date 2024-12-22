@@ -1,13 +1,16 @@
 # <div align="center">Satellite Image Semantic Segmentation</div>
 
 ## Project Overview
-This project focuses on semantic segmentation of aerial/satellite imagery for land cover classification. The model processes RGB satellite images (512x512x3) in PNG format to identify and segment different land cover features. The project evaluates various deep learning architectures (such as **DeepLabV3+**, **UNet**, etc.) to determine the most effective approach for high-resolution satellite image segmentation, with applications in urban, forest, water and other terrain features detection.
+This project focuses on semantic segmentation of aerial/satellite imagery for land cover classification. The model processes RGB satellite images (256x256x3) in PNG format to identify and segment different land cover features. The project evaluates various deep learning architectures (such as **DeepLabV3+**, **UNet**, etc.) to determine the most effective approach for high-resolution satellite image segmentation, with applications in urban, forest, water and other terrain features detection.
 
+<details open>
+  <summary><strong>Pre-trained project:</strong></summary>
 While the project structure is modular and can accommodate different architectures and datasets, this specific implementation includes:
 - A trained model using the **DeepLabV3+** architecture
 - Training performed on a land cover dataset (included in the repository)
 - Optimization using **AdamW** optimizer
 - Training with **Dice loss** function for semantic segmentation
+</details>
 
 ## Table of Contents
 - Getting Started: Important Requirements and Labeling, Peoject Directory Structure.
