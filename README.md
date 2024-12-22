@@ -20,6 +20,8 @@ While the project structure is modular and can accommodate different architectur
 - [Installations](#installations)
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
+  - [Config file](#config.yaml-file)
+  - 
 - [Pre-trained Model Results](#pre-trained-model-results)
 
 ## Getting Started: Important Requirements and Labeling
@@ -98,6 +100,24 @@ The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW
 
 ## Usage
 
+### config.yaml File:
+The config.yaml file contains all the essential settings for configuring your training process. By modifying these settings, you can fine-tune the training process to suit your dataset and desired outcomes.
+
+**Key Settings to Modify for Effective Training**
+Before running the test, you can adjust the following parameters in the config.yaml to optimize your training:
+
+Model: Choose the architecture (e.g., DeepLabV3+, UNet, etc.).
+Loss Function: Select a suitable loss function (e.g., BCEWithLogitsLoss, Dice Loss).
+Optimizer: Choose between AdamW, Adam, or SGD.
+Learning Rate: Adjust the learning rate for optimal training speed and stability.
+Batch Size: Modify the batch size to suit your GPU memory capacity.
+Epochs: Set the number of epochs based on the size of your dataset and training goals.
+Make sure the settings align with your hardware capabilities and dataset size for efficient training.
+<br>
+There are two options for modifying the config.yaml file:
+1. Go to the config.yaml file, change the settings, and save it (this will become your default configuration).
+2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
+
 ## Pre-trained Model Results
 
 
@@ -113,11 +133,6 @@ The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW
 
 
 
-
-
-
-
-![image](https://github.com/user-attachments/assets/1e966d09-4134-4e56-b566-df9eb56a0c76)
 
 
 
