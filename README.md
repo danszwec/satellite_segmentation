@@ -20,7 +20,7 @@ While the project structure is modular and can accommodate different architectur
 - [Installations](#installations)
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
-  - [Config file](#config.yaml-file)
+  - [Config file](#config-file)
   - [How to use main.py](#how-to-use-main)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
@@ -100,7 +100,7 @@ The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW
 
 ## Usage
 
-### config.yaml File
+### config File
 The config.yaml file contains all the essential settings for configuring your training process. By modifying these settings, you can fine-tune the training process to suit your dataset and desired outcomes.
 
 **Key Settings to Modify for Effective Training**
@@ -119,7 +119,7 @@ There are two options for modifying the config.yaml file:
 2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
 
 ### How to use main
-**Follow the prompts on-screen to ensure a smooth workflow.**
+**In main.py - Follow the prompts on-screen to ensure a smooth workflow.**
 
 1. **Launch the Script:** Run the script from your terminal or command line interface.
 2. **Welcome Screen:**
