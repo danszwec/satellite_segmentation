@@ -16,7 +16,7 @@ While the project structure is modular and can accommodate different architectur
 
 ## Table of Contents
 - [Getting Started: Important Requirements and Labeling, Project Directory Structure](#getting-started-important-requirements-and-labeling)
-- Data Organization and Optional Dataset
+- [Data Organization and Optional Dataset](#data-organization-and-optional-dataset)
 - Installation
 - Model Architecture
 - Usage
