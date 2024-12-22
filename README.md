@@ -130,25 +130,25 @@ There are two options for modifying the config.yaml file:
    - Choose whether to use the default pre-trained configuration:
      - Y: Load the default configuration.
      - n: Enter the configuration update screen.
-       **Configuration Options:** In the configuration update screen, customize the following:
-       Architecture: Select from the following options:
-       * DeepLabV3+
-       * Unet
-       * PSPNet
-       * Unet++
-       Loss Function: Choose one of the following:
-       * Dice Loss
-       * BCE With Logits Loss
-       * Jaccard Loss
-       * Focal Loss
-       Optimizer: Select an optimizer:
-       * AdamW
-       * Adam
-       * SGD
-       Weight Decay: Choose a weight decay value:
-       * 0.001
-       * 0.0001
-       * 0.00001
+**Configuration Options:** In the configuration update screen, customize the following:
+- Architecture: Select from the following options:
+  * DeepLabV3+
+  * Unet
+  * PSPNet
+  * Unet++
+- Loss Function: Choose one of the following:
+  * Dice Loss
+  * BCE With Logits Loss
+  * Jaccard Loss
+  * Focal Loss
+- Optimizer: Select an optimizer:
+  * AdamW
+  * Adam
+  * SGD
+- Weight Decay: Choose a weight decay value:
+  * 0.001
+  * 0.0001
+  * 0.00001
 4. **Dataset Configuration:**
    - You will be asked if you want to change the dataset:
      - Y: Specify the path to your dataset and provide a name.
