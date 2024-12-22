@@ -26,18 +26,22 @@ While the project structure is modular and can accommodate different architectur
 ### Project Directory Structure:
 To set up the project environment:
 1. Clone the repository to your desired location:
-   git clone <repository-url>
+```bash
+git clone <repository-url>
+```
 2. Navigate to your project directory and ensure it has the following structure:
-   your_model_path/
-  ├── Data/
-  │   └── Dataset_dir/
-  ├── result/          # Generated automatically
-  ├── utils/
-  ├── main.py
-  ├── testEvaluation.py
-  ├── train.py
-  ├── inference.py
-  └── config.yaml
+```
+your_model_path/
+├── Data/
+│   └── Dataset_dir/
+├── result/          # Generated automatically
+├── utils/
+├── main.py
+├── testEval.py
+├── train.py
+├── inference.py
+└── config.yaml
+```
 
 ## Data Organization and Optional Dataset
 ### Data Organization
