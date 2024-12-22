@@ -79,9 +79,6 @@ place here the optional dataset that we work with.
 - [Installation Guide](#installation-guide)
 - [How to Use](#how-to-use)
 
-## Getting Started
-Content here...
-
 ## Installation Guide
 Content here...
 
