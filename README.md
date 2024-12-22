@@ -10,7 +10,7 @@ While the project structure is modular and can accommodate different architectur
 - Training with **Dice loss** function for semantic segmentation
 
 ## Table of Contents
-- Important Requirements and Labeling
+- Getting Started: Important Requirements and Labeling, Peoject Directory Structure.
 - Data Organization and Optional Dataset
 - Installation
 - Model Architecture
@@ -22,6 +22,22 @@ While the project structure is modular and can accommodate different architectur
 - Ensure that each image in the `images` folder has a corresponding mask in the `masks` folder.                 (- Ensure that the images is organized as written in "Data organinzation and Optional Dataset" to make your run easier)
 - All images and masks should be of the same resolution (e.g., **256x256** or **512x512**).
 - Images should be in formats such as **PNG** or **JPEG**, and masks should be grayscale images where each pixel corresponds to a class label (e.g., 0 for background, 1 for urban, 2 for forest, etc.).
+
+### Project Directory Structure:
+To set up the project environment:
+1. Clone the repository to your desired location:
+   git clone <repository-url>
+2. Navigate to your project directory and ensure it has the following structure:
+   your_model_path/
+  ├── Data/
+  │   └── Dataset_dir/
+  ├── result/          # Generated automatically
+  ├── utils/
+  ├── main.py
+  ├── testEvaluation.py
+  ├── train.py
+  ├── inference.py
+  └── config.yaml
 
 ## Data Organization and Optional Dataset
 ### Data Organization
