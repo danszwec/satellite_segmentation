@@ -21,7 +21,7 @@ While the project structure is modular and can accommodate different architectur
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
   - [Config file](#config.yaml-file)
-  - [How to use main.py](#how-to-use-main.py)
+  - [How to use main.py](#how-to-use-main)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
 ## Getting Started: Important Requirements and Labeling
@@ -118,7 +118,7 @@ There are two options for modifying the config.yaml file:
 1. Go to the config.yaml file, change the settings, and save it (this will become your default configuration).
 2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
 
-### How to use main.py
+### How to use main
 **Follow the prompts on-screen to ensure a smooth workflow.**
 
 1. **Launch the Script:** Run the script from your terminal or command line interface.
