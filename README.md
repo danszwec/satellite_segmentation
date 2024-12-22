@@ -21,7 +21,8 @@ While the project structure is modular and can accommodate different architectur
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
   - [Config file](#config-file)
-  - [How to use main.py](#how-to-use-main)
+  - [How to run a training loop via main.py](#how-to-run-a-training-loop-via-main)
+  - [Test Evaluations](#test-evaluations)
   - [How to use "Inference" - Check the model weights on an image](#how-to-use-inference)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
@@ -119,7 +120,7 @@ There are two options for modifying the config.yaml file:
 1. Go to the config.yaml file, change the settings, and save it (this will become your default configuration).
 2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
 
-### How to use main
+### How to run a training loop via main
 **In main.py - Follow the prompts on-screen to ensure a smooth workflow.**
 
 1. **Launch the Script:** Run the script from your terminal or command line interface.
@@ -163,6 +164,10 @@ There are two options for modifying the config.yaml file:
 
 After finalizing all configurations, you will see a summary of the selected settings, and the training loop will begin automatically.
 
+### Test Evaluations
+כאן צריך לכתוב הסבר על הטסט אבלואיישן!
+
+
 ### How to use Inference
 **In inference.py - Follow the prompts on-screen to ensure a smooth workflow.**
 
@@ -181,12 +186,6 @@ After completing these steps, the script will generate two files in the same dir
 2. An .xml file with the segmented poligons (a Vector map)
    
 ברגע שסיימנו לבנות את האינפרנס וראינו שהוא רץ - להראות איך מפעילים את האינפרנס!
-
-
-
-
-
-
 
 
 
