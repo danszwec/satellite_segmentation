@@ -199,21 +199,3 @@ To demonstrate the model's practical effectiveness, we've included several examp
 
 ![grid_image](https://github.com/user-attachments/assets/1070e585-cc2e-4485-87b9-584c874380f1)
 
-
-
-
-
-
-########################################################################
-
-#### Changing Hyperparameters
-
-If you want to adjust the hyperparameters (e.g., learning rate, optimizer, batch size, or number of epochs) for model training, you will need to rewrite the `config.yaml` file in the cloned repository. 
-
-After cloning the repository, follow these steps to update the configuration:
-
-1. Open the `config.yaml` file in the root directory of the cloned repository.
-2. Modify the parameters as needed and save.
-#### Training the Model
-
-Run the following command to begin training:
