@@ -196,15 +196,8 @@ Our semantic segmentation model was trained using a DeepLabV3+ architecture with
 The training process showed consistent improvement, with both training and validation loss **converging to approximately 0.005.** This parallel reduction in loss values indicates that our model effectively learned the underlying patterns without overfitting to the training data. 
 
 To demonstrate the model's practical effectiveness, we've included several example predictions below. These visualizations showcase the model's ability to accurately segment different land cover features from aerial imagery.
-![5](https://github.com/user-attachments/assets/325c3370-1ad5-495e-87c5-a3bcc85c24e1)
-![4](https://github.com/user-attachments/assets/bf50d06a-7e03-4014-8b4a-11211eee71c7)
-![3](https://github.com/user-attachments/assets/b3287239-14b2-45a1-8263-1fa7a98e8ffe)
-![2](https://github.com/user-attachments/assets/ae76ff7d-dd2b-4ece-a6f0-e78947c4eff3)
 
-
-
-
-
+![grid_image](https://github.com/user-attachments/assets/1070e585-cc2e-4485-87b9-584c874380f1)
 
 
 
