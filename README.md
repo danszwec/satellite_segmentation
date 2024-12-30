@@ -165,9 +165,26 @@ There are two options for modifying the config.yaml file:
 
 After finalizing all configurations, you will see a summary of the selected settings, and the training loop will begin automatically.
 
-### Test Evaluations and Model Comparison
-At the end of the training process, the program automatically compares the performance of different checkpoints to help you evaluate the model's progress over time. This comparison provides insights into how the model's performance varies between different stages of training.
-כאן צריך לכתוב הסבר על הטסט אבלואיישן!
+
+## Test Evaluation and Model Comparison
+
+At the end of the training process, the program automatically compares the performance of different checkpoints to help you evaluate the model's progress over time. This comparison provides insights into how the model's performance varies between different stages of training and across different architectures.
+
+**Command to run**:  
+```
+python test_evaluation.py
+```
+
+### Metrics Evaluated
+The program computes and reports the following metrics for each checkpoint:
+
+- Recall
+- Precision
+- F1 Score
+- Pixel Accuracy
+- IoU (Intersection over Union)
+- Inference Speed
+These metrics provide a comprehensive evaluation of model performance and efficiency.
 
 
 ### How to use Inference
