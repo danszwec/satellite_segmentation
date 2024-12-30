@@ -71,10 +71,23 @@ To work with the same dataset used in this project, you can download it from htt
 **Important Note:** Before using the dataset, you'll need to perform preprocessing steps as outlined in the data preparation section of this repository. The preprocessing is essential to ensure the data is in the correct format for the model training and evaluation processes.
 
 ## Installations:
-**still need to update!!!!! download a docker**
-* אי אפשר להעלות לגיט קובץ ענק של 6 ג'יגה אז אי אפשר להעלות לפה דוקר שלם (אפשר לעשות את זה בשביל המחשב שלנו)
-*  לשים פה קישור לדוקר פייל
-* להכין קובץ ריקוויירמנטס בשביל כל הפרוייקט
+
+To run this project, we recommend using our Docker environment which ensures consistent setup across different systems.
+
+First, make sure you have Docker installed on your system, along with NVIDIA drivers and NVIDIA Container Toolkit installed and properly configured. Once these prerequisites are met, pull our PyTorch Docker image by running
+```bash
+docker pull nvcr.io/nvidia/pytorch:23.10-py3. 
+'''
+After the image is downloaded, you can create and start your container using the following command:
+```bash
+docker run -it --gpus all --name pytorch_container -v /path/to/your/project:/workspace nvcr.io/nvidia/pytorch:23.10-py3
+'''
+Make sure to replace **/path/to/your/project** with the actual path to your project directory on your local machine. This command creates a container with GPU support and mounts your project directory, allowing seamless file access between your host system and the container. Once inside the container, install the required dependencies by running
+```bash
+pip install -r requirements.txt.
+'''
+You can verify your setup by checking GPU availability in Python with **torch.cuda.is_available()**, which should return **True** if everything is configured correctly.
+
 
 ## Model Selection, Loss Functions, and Optimizers
 ### Model Architecture
