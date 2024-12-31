@@ -22,7 +22,8 @@ While the project structure is modular and can accommodate different architectur
 - [Usage](#usage)
   - [Config file](#config-file)
   - [How to run a training loop via main.py](#how-to-run-a-training-loop-via-main)
-  - [Test Evaluations and Model Comparison](#test-evaluations-and-model-comparison)
+  - [Test Evaluations and Model Comparison](#test-evaluation-and-model-comparison)
+
   - [How to use "Inference" - Check the model weights on an image](#how-to-use-inference)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
