@@ -224,7 +224,7 @@ After completing these steps, the script will generate two files in the same dir
 
 
 ## Pre-trained Model Results
-Our semantic segmentation model was trained using a DeepLabV3+ architecture with BCEwithlogits loss function, processing 512x512 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
+Our semantic segmentation model was trained using a DeepLabV3+ architecture with CE loss function, processing 512x512 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
 ![6](https://github.com/user-attachments/assets/9e403a90-6bab-4dbe-9ced-e6a11dbc5e7b)
 
 The training process showed consistent improvement, with both training and validation loss **converging to approximately 0.005.** This parallel reduction in loss values indicates that our model effectively learned the underlying patterns without overfitting to the training data. 
