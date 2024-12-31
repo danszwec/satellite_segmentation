@@ -184,8 +184,8 @@ After finalizing all configurations, you will see a summary of the selected sett
 
 At the end of the training process, the program automatically compares the performance of different checkpoints to help you evaluate the model's progress over time. This comparison provides insights into how the model's performance varies between different stages of training and across different architectures.
 
-**Command to run**:  
-```
+**If you want to run the test evaluation separately after getting your results, use this command:**  
+```bash
 python test_evaluation.py
 ```
 
