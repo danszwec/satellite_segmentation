@@ -188,6 +188,7 @@ At the end of the training process, the program automatically compares the perfo
 ```bash
 python test_evaluation.py
 ```
+**Important: When running test_evaluation.py, you need to specify the path to the results directory. If you want to compare different models or batches, you can create a new directory containing all the weights and run the test evaluation on that directory.**
 
 ### Metrics Evaluated
 The program computes and reports the following metrics for each checkpoint:
