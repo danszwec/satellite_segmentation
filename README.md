@@ -112,7 +112,7 @@ Choose from the following optimizers:
 * SGD: Classic optimizer, effective for fine-tuning.
 
 ### Default Configuration
-The default setup uses **DeepLabV3+** with **BCEWithLogitsLoss** and the **AdamW** optimizer, offering a good balance for general segmentation tasks.
+The default setup uses **DeepLabV3+** with **CrossEntropy Loss** and the **AdamW** optimizer, offering a good balance for general segmentation tasks.
 
 
 ## Usage
