@@ -158,7 +158,7 @@ There are two options for modifying the config.yaml file:
   * Unet++
 - Loss Function: Choose one of the following:
   * Dice Loss
-  * BCE With Logits Loss
+  * Cross Entropy Loss
   * Jaccard Loss
   * Focal Loss
 - Optimizer: Select an optimizer:
