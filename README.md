@@ -215,6 +215,7 @@ These metrics provide a comprehensive evaluation of model performance and effici
    - Enter the path to the model weights you wish to use.
    - Provide the path to the image you want to segment.
 
+**Attention! You MUST check the number of classes in the pre-trained weights and UPDATE the desired_class value in the config.yaml file**
 After completing these steps, the script will generate two files in the same directory as the input image:
 1. The segmented image
 2. An .xml file with the segmented poligons (a Vector map)
