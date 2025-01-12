@@ -21,7 +21,7 @@ While the project structure is modular and can accommodate different architectur
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
   - [Config file](#config-file)
-  - [How to run a training loop via train.py](#hoy-to-run-a-training-loop-via-train)
+  - [How to run a training loop via train.py](#how-to-run-a-training-loop-via-train)
   - [How to run a training loop via main.py](#how-to-run-a-training-loop-via-main)
   - [Test Evaluations and Model Comparison](#test-evaluation-and-model-comparison)
 
