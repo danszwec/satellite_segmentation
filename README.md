@@ -148,7 +148,10 @@ python train.py
 ### How to run a training loop via main
 **In main.py - Follow the prompts on-screen to ensure a smooth workflow.**
 
-1. **Launch the Script:** Run the main.py script from your terminal or command line interface.
+1. **Launch the Script:** Open your terminal or command line interface, navigate to the project directory and run the script using:
+   ```bash
+   python main.py
+   ```
 2. **Welcome Screen:**
    - You will be presented with a welcome screen.
 ![image](https://github.com/user-attachments/assets/6453ad70-6760-41b7-887f-12f24a34e6a7)
