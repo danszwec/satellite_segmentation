@@ -139,10 +139,12 @@ There are two options for modifying the config.yaml file:
 ### How to run a training loop via train
 
 **In tain.py - Follow the prompts on-screen to ensure a smooth workflow.**
-1. **Update the config.yaml file**
-2. **In the buttom of train.py** - change the adress for the config.yaml file
-3. **Launch the Script:** Run the train.py script from your terminal or command line interface.
-
+1. **Update Configurations:** Modify the config.yaml file with your desired parameters and ensure all paths and settings are correctly specified.
+2. **In the buttom of train.py** - At the bottom of train.py, update the path to your config.yaml file
+3. **Launch the Script:** Open your terminal or command line interface, navigate to the project directory and run the script using:
+```bash
+python train.py
+```
 ### How to run a training loop via main
 **In main.py - Follow the prompts on-screen to ensure a smooth workflow.**
 
