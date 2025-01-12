@@ -21,6 +21,7 @@ While the project structure is modular and can accommodate different architectur
 - [Model Selection, Loss Functions, and Optimizers](#Model-selection-loss-functions-and-optimizers)
 - [Usage](#usage)
   - [Config file](#config-file)
+  - [How to run a training loop via train.py](#hoy-to-run-a-training-loop-via-train)
   - [How to run a training loop via main.py](#how-to-run-a-training-loop-via-main)
   - [Test Evaluations and Model Comparison](#test-evaluation-and-model-comparison)
 
@@ -135,10 +136,17 @@ There are two options for modifying the config.yaml file:
 1. Go to the config.yaml file, change the settings, and save it (this will become your default configuration).
 2. Use the menu and choose not to use the default configuration (this will be a temporary configuration). If you like the outcome of the model after the run, you can set it as the default at the end.
 
+### How to run a training loop via train
+
+**In tain.py - Follow the prompts on-screen to ensure a smooth workflow.**
+1. **Update the config.yaml file**
+2. **In the buttom of train.py** - change the adress for the config.yaml file
+3. **Launch the Script:** Run the train.py script from your terminal or command line interface.
+
 ### How to run a training loop via main
 **In main.py - Follow the prompts on-screen to ensure a smooth workflow.**
 
-1. **Launch the Script:** Run the script from your terminal or command line interface.
+1. **Launch the Script:** Run the main.py script from your terminal or command line interface.
 2. **Welcome Screen:**
    - You will be presented with a welcome screen.
 ![image](https://github.com/user-attachments/assets/6453ad70-6760-41b7-887f-12f24a34e6a7)
