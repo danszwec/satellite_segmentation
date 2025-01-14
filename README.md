@@ -1,7 +1,7 @@
 # <div align="center">Satellite Image Semantic Segmentation</div>
 
 ## Project Overview
-This project focuses on semantic segmentation of aerial/satellite imagery for land cover classification. The model processes RGB satellite images (512x512x3) in PNG format to identify and segment different land cover features. The project evaluates various deep learning architectures (such as **DeepLabV3+**, **UNet**, etc.) to determine the most effective approach for high-resolution satellite image segmentation, with applications in urban, forest, water and other terrain features detection.
+This project focuses on semantic segmentation of aerial/satellite imagery for land cover classification. The model processes RGB satellite images (256x256x3) in PNG format to identify and segment different land cover features. The project evaluates various deep learning architectures (such as **DeepLabV3+**, **UNet**, etc.) to determine the most effective approach for high-resolution satellite image segmentation, with applications in urban, forest, water and other terrain features detection.
 
 <details open>
   <summary><strong>Pre-trained project details:</strong></summary>
@@ -31,7 +31,7 @@ While the project structure is modular and can accommodate different architectur
 ## Getting Started: Important Requirements and Labeling
 - Ensure that the images and masks is organized and as written in "Data organinzation and Optional Dataset".
 - Ensure that eace image has a corresponding mask
-- All images and masks should be of the same resolution (e.g., **512x512**).
+- All images and masks should be of the same resolution (e.g., **256x256**).
 - Images should be in formats such as **PNG** or **JPEG**, and masks should be **grayscale** images where each pixel corresponds to a class label (e.g., 0 for background, 1 for urban, 2 for forest, etc.).
 - **If you want to tag images for this semantic segmentation project, please visit [The CVAT Labeling Infrastructure Guide](https://github.com/danszwec/segmentation-labeling-Toolkit), where you'll find instructions on how to tag and save the images.**
 
@@ -251,7 +251,7 @@ This method offers a more direct approach:
    ```
 
 ## Pre-trained Model Results
-Our semantic segmentation model was trained using a DeepLabV3+ architecture with CE loss function, processing 512x512 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
+Our semantic segmentation model was trained using a DeepLabV3+ architecture with CE loss function, processing 256x256 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
 ![6](https://github.com/user-attachments/assets/9e403a90-6bab-4dbe-9ced-e6a11dbc5e7b)
 
 The training process showed consistent improvement, with both training and validation loss **converging to approximately 0.005.** This parallel reduction in loss values indicates that our model effectively learned the underlying patterns without overfitting to the training data. 
