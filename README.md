@@ -12,6 +12,7 @@ While the project structure is modular and can accommodate different architectur
 * Training performed on a land cover dataset (included in the repository)
 * Optimization using **AdamW** optimizer
 * Training with **CrossEntropy loss** function for semantic segmentation
+* Our dataset class is: **7**
 </details>
 
 ## Table of Contents
