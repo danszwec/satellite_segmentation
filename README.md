@@ -217,6 +217,7 @@ These metrics provide a comprehensive evaluation of model performance and effici
 
 ### How to use Inference
 **Important! Before proceeding, You MUST verify the number of classes in your pre-trained weights and UPDATE the desired_class value in the config.yaml file accordingly**
+
 There are two methods to run the inference module:
 1. Using main.py
 2. Using inference.py
