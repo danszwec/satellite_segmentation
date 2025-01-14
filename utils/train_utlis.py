@@ -23,41 +23,31 @@ import json
 from sklearn.metrics import precision_recall_curve
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def get_accuracy(predictions,masks,desirable_class):
+def get_accuracy(predictions,masks):
     """
-    Computes the mean Intersection over Union (IoU) for a set of predictions and corresponding ground truth masks.
+    Calculate the accuracy of the model predictions.
 
     Args:
-        predictions (torch.Tensor): A tensor containing the predicted class labels or probabilities. 
-                                     Dimensions should be [batch_size, num_classes, height, width] 
-                                     if probabilities, or [batch_size, height, width] if class labels.
-        masks (torch.Tensor): A tensor containing the ground truth class labels. 
-                              Dimensions should be [batch_size, height, width].
-        desirable_class (int): The number of classes to evaluate, including the background class.
+        predictions (torch.Tensor): The model predictions with shape (N, H, W) or (N, C, H, W),
+                                    where N is the batch size, C is the number of classes, H and W are the height and width of the masks.
+        masks (torch.Tensor): The ground truth masks with the same shape as predictions.
+        desirable_class (int): The class index for which to compute accuracy.
 
     Returns:
-        float: The mean IoU across all specified classes.
+        float: The accuracy of the model predictions.
     """
-    
-    # Ensure the predictions and labels are on the same device
-    predictions = predictions.to(masks.device)
-        # Convert predictions to binary (0 or 1) if they are probabilities
-    if predictions.dim() > 1 and predictions.size(1) > 1:
-        predictions = predictions.argmax(dim=1)
-        masks = masks.argmax(dim=1)
-    # Initialize variables to keep track of intersection and union
-    iou = 0.0
-    for cls in range(desirable_class):
-        pred_mask = (predictions == cls)
-        true_mask = (masks == cls)
-        intersection = (pred_mask & true_mask).sum().float()
-        union = (pred_mask | true_mask).sum().float()
+    with torch.no_grad():
+        # Get predicted class indices
+        preds = predictions.argmax(dim=1)  # Shape: [B, H, W]
         
-        if union > 0:
-            iou += intersection / union
-    
-    mean_iou = iou / (desirable_class)
-    return mean_iou.item()
+        # Prepare masks - remove channel dimension
+        masks = masks.squeeze(1)  # Shape: [B, H, W]
+        
+        # Calculate accuracy
+        accuracy = (preds == masks).float().mean().item()
+        
+    return accuracy
+
 
 def get_class_one_accuracy(predictions,masks,num_cls):
     """
@@ -73,7 +63,6 @@ def get_class_one_accuracy(predictions,masks,num_cls):
         float: The IoU for the specified class. If no area exists (union is 0), the IoU will be 0.0.
     """
     
-
     # Ensure the predictions and labels are on the same device
     predictions = predictions.to(masks.device)
     # Convert predictions to binary (0 or 1) if they are probabilities
@@ -185,8 +174,8 @@ def check_convergence(lst_loss,lst_loss_val,back_epochs,epslion):
     Returns:
         bool: True if the model is considered to have converged, otherwise False.
     """
-    # Ensure the list has at least 10 items
-    if len(lst_loss) < 20:
+    # Ensure the list has at least 30 items
+    if len(lst_loss) < 30:
         return False
     # Extract the last 10 items
     last_items = lst_loss[-back_epochs:]
@@ -288,7 +277,6 @@ def pad_to_mod16(arr):
     padded_arr = np.pad(arr, ((0, pad_height), (0, pad_width), (0, 0)), mode='constant', constant_values=0)
     return padded_arr
 
-
 def select_optimizer(model,optimizer_name,lr,weight_decay):
     """
     Select and initialize an optimizer for the given model based on the specified parameters.
@@ -305,6 +293,13 @@ def select_optimizer(model,optimizer_name,lr,weight_decay):
     if optimizer_name == "AdamW":
         optimizer = optim.AdamW(model.parameters(), lr=lr,weight_decay=weight_decay)   
         return optimizer
+    if optimizer_name == "Adam":
+        optimizer = optim.Adam(model.parameters(), lr=lr,weight_decay=weight_decay)   
+        return optimizer
+    if optimizer_name == "SGD":
+        optimizer = optim.SGD(model.parameters(), lr=lr,weight_decay=weight_decay)   
+        return optimizer
+    
 def select_transform(config,test_mode = None):
     """
     Select and return image transformations for training and validation based on the given configuration.
@@ -417,7 +412,7 @@ def update_learning_curves(train_accuracy, val_accuracy, train_loss, val_loss, n
         plt.suptitle(f'{model_name}')
         plt.xlabel('Epochs')
         plt.ylabel('Accuracy')
-        plt.ylim(0, 1)
+        plt.ylim(0, max(1,max(val_accuracy)))  
         plt.legend()
     
         # Subplot for loss
@@ -444,7 +439,7 @@ def update_learning_curves(train_accuracy, val_accuracy, train_loss, val_loss, n
     
     plt.subplot(1, 2, 2)
     plt.xlim(1, num_epochs)
-    plt.ylim(0, 1.3)  # Add a bit of margin to the y-axis
+    plt.ylim(0, max(1,max(val_loss)))  # Add a bit of margin to the y-axis
 
     # Remove old text annotations
     for ax in plt.gcf().get_axes():
@@ -531,12 +526,9 @@ def plot_confusion_matrix(best_model_dir,best_model, test_dataset,model,desirabl
     ax.set_xticklabels(class_names)
     ax.set_yticklabels(class_names)
     plt.title('Confusion Matrix (in %)')
-
     plt.savefig(best_model_dir)  
-
     plt.show()
     
-
 def pad_to_mod16(arr):
     """
     Description:
@@ -553,8 +545,6 @@ def pad_to_mod16(arr):
 
     padded_arr = np.pad(arr, ((0, pad_height), (0, pad_width), (0, 0)), mode='constant', constant_values=0)
     return padded_arr
-
-
 
 def extract_values_between_strings(file_path, start_string, end_string=None):
     """
@@ -689,7 +679,6 @@ def peek_version(version):
 
     return dir
 
-
 def convert_numpy_to_native(obj):
     """Recursively convert NumPy types to native Python types."""
     if isinstance(obj, np.ndarray):
@@ -707,7 +696,6 @@ def convert_numpy_to_native(obj):
         return [convert_numpy_to_native(x) for x in obj]
     else:
         return obj
-
 
 def vector_map(mask,output_path):
     """
@@ -781,7 +769,6 @@ def vector_map(mask,output_path):
         json.dump(geojson, f, separators=(',', ':'))
     return
 
-
 def pred_map(model,best_model_dir,path):
     """
     Generates a vectorized GeoJSON map from a model's prediction on a given image.
@@ -812,11 +799,7 @@ def pred_map(model,best_model_dir,path):
     gs_output = test_output[0].argmax(dim=1)
     vector_map(gs_output,img_name)
     return
-
-
-
-
-    
+ 
 def compare_map_mask(mask, img, original_map):
     """test_dataset
     Plots three RGB images side by side with titles.
@@ -909,8 +892,6 @@ def build_banch_mark(cfg,model_dir,test_dataset):
     plt.pause(0.1)
     return
 
-
-
 def weight_tensor(train_annotations_dir , number_of_class):
     """
     Compute class weights based on pixel frequencies in the training annotations for the BCE loss function.
@@ -924,8 +905,8 @@ def weight_tensor(train_annotations_dir , number_of_class):
         torch.Tensor: A tensor of shape (number_of_class, 1, 1) with the computed weights.
     """
 # Directory containing your mask images
+    total_pixels = 0
     class_counts = np.zeros(number_of_class)
-    inverse_frequencies = np.zeros(number_of_class)
     for filename in os.listdir(train_annotations_dir):
         if filename.endswith(".png") or filename.endswith(".jpg"):
             # Load image
@@ -935,27 +916,59 @@ def weight_tensor(train_annotations_dir , number_of_class):
             mask = mask.unsqueeze(0)
             mask = one_hot(mask,number_of_class)
             for i in range(len(class_counts)):
-                class_counts[i] += (mask==i).sum().item()
+                class_counts[i] += mask[:, i, :, :].sum()
+            total_pixels += mask.numel()
     # Get class frequencies
     for i in range(len(class_counts)):
-                inverse_frequencies[i] = 1 / class_counts[i]
-    # Normalize weights
-    sum_inverse_frequencies = sum(inverse_frequencies)
-    pos_weight = torch.tensor([weight / sum_inverse_frequencies for weight in inverse_frequencies])
-    pos_weight = (pos_weight.view(number_of_class, 1, 1)).to(device)
+        total_pixels_without_class = total_pixels - class_counts[i]
+        class_counts[i] = total_pixels_without_class / class_counts[i]
+    # set as tensor
+    pos_weight = torch.tensor(class_counts, dtype=torch.float, device=device)
     return pos_weight
 
-def predict(model, input):
+def calculate_class_distribution(dataset):
+    class_counts = {}
+    
+    for idx in tqdm(range(len(dataset)), desc="Processing Masks distribution for class weights:"):
+        mask = dataset[idx][1]
+        if isinstance(mask, torch.Tensor):
+            mask = mask.numpy()
+            
+        unique, counts = np.unique(mask, return_counts=True)
+        for cls, count in zip(unique, counts):
+            if cls in class_counts:
+                class_counts[cls] += count
+            else:
+                class_counts[cls] = count
+
+    total_pixels = sum(class_counts.values())
+    class_distribution = {cls: count / total_pixels for cls, count in class_counts.items()}
+    
+    return class_distribution
+
+def calculate_class_weights(class_distribution, smoothing_factor=0.1):
+    max_proportion = max(class_distribution.values())
+    class_weights = []
+
+    for cls in range(max(class_distribution.keys()) + 1):
+        proportion = class_distribution.get(cls, 0)
+        weight = max_proportion / (proportion + smoothing_factor)
+        class_weights.append(weight)
+
+    pos_weight = torch.tensor(class_weights, dtype=torch.float32, device=device)
+    return pos_weight
+
+
+def model_predict(model, input):
     output = model(input)[0]
     output = F.softmax(output, dim=1)
     output = torch.argmax(output, dim=1)
     return output
 
-
 ###########loss utils########
 
 # Select the Loss method
-def select_loss(criterion_name,data_dir,loss_mode,desirable_class,log_loss,from_logits,smooth,ignore_index,eps):
+def select_loss(criterion_name,data_dir,loss_mode,desirable_class,log_loss,from_logits,smooth,ignore_index,eps,train_loader):
     """
     Select and initialize a loss function based on the given parameters.
 
@@ -978,10 +991,13 @@ def select_loss(criterion_name,data_dir,loss_mode,desirable_class,log_loss,from_
         criterion = smp.losses.DiceLoss(loss_mode,list(range(desirable_class)),log_loss,from_logits,smooth,ignore_index,eps)            
     
     if criterion_name ==  "BCEWithLogitsLoss":
-        image_train_dir, mask_train_dir, image_val_dir, mask_val_dir=get_directories(data_dir)
-        pos_weight = weight_tensor(mask_train_dir,desirable_class)
-        criterion = nn.BCEWithLogitsLoss(pos_weight)
-    
+        criterion = nn.BCEWithLogitsLoss()
+
+    if criterion_name == "CrossEntropyLoss":
+        train_distribution = calculate_class_distribution(train_loader.dataset)
+        class_weights = calculate_class_weights(train_distribution)
+        criterion = nn.CrossEntropyLoss(weight=class_weights, ignore_index=255)
+
     if criterion_name == "JaccardLoss":
         criterion = smp.losses.JaccardLoss(loss_mode,list(range(desirable_class)),log_loss,from_logits,smooth,eps)
 

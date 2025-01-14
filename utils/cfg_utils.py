@@ -111,12 +111,12 @@ def update_cfg(config):
 
     # Ask the user for a Loss function name
     while True:
-        new_loss = input(f"{Fore.CYAN}Loss Function:{Fore.RESET} \n1. Dice Loss {Fore.YELLOW}(Default){Fore.RESET} \n2. BCE With Logits Loss \n3. Jaccard Loss \n4. Focal Loss \n")
+        new_loss = input(f"{Fore.CYAN}Loss Function:{Fore.RESET} \n1. Dice Loss \n2. Cross Entropy Loss {Fore.YELLOW}(Default){Fore.RESET} \n3. Jaccard Loss \n4. Focal Loss \n")
         if new_loss == "1":
             config['loss']['name'] = 'DiceLoss'
             break
         if new_loss == "2":
-            config['loss']['name'] = 'BCEWithLogitsLoss'
+            config['loss']['name'] = 'CrossEntropyLoss'
             break
         if new_loss == "3":
             config['loss']['name'] = 'JaccardLoss'

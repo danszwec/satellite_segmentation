@@ -1,59 +1,39 @@
 data:
-  dir: /data/landcover_crop/256
+  dir: /workspace/Data/land_cover_new_crop/Dataset/256
   name: landcover
 loss:
-  eps: 1.0e-07
+  eps: 1.0e-06
   from_logits: true
-  ignore_index: null
+  ignore_index: 255
+  smoothing_factor: 0.1
   log_loss: true
   mode: multiclass
-  name:  BCEWithLogitsLoss #DiceLoss 
+  name: CrossEntropyLoss
   smooth: 0.1
 model: 
   activation: softmax
-  dropout: 0.3
+  dropout: 0.5
   encoder_name: resnet101
   encoder_weights: imagenet
   model_name: DeepLabV3Plus
   pooling: max
 test_evaluation:
   dir: /home/oury/Documents/Segmentation_Project/Data/land_cover/test
-  example_list:
-  - 26961_sat.jpg
-  - 803525_sat.jpg
-  - 361109_sat.jpg
-  - 267766_sat.jpg
-  - 186618_sat.jpg
-  - 181781_sat.jpg
   model_name: null
   save_dir: null
 train: 
   back_epochs: 10
   batch_size: 32
-  check_convergence_epslion: 0.001
+  check_convergence_epslion: 0.0001
   desirable_class: 4
-  lr: 1.0e-05
+  lr: 0.001
   num_epochs: 80
   optimizer_name: AdamW
-  weight_decay: 0.0001
+  weight_decay: 0.04
 transformes:
-  degrees: 75
-  possibility: 0.3
   types:
-    ColorJitter: False 
-    Rotation: True 
+    ColorJitter: True 
     horizontal_flip: True 
     vertical_flip: True 
 
-banch_mark:
-  models :
-  - /home/oury/Documents/Segmentation_Project/result/aug/BCE_COMPRESS_256_LAND_COVER/best_model/2024-08-05_model_name_=DeepLabV3Plus_epoch60_BCEWithLogitsLoss_landcover_compress_256
-  - /home/oury/Documents/Segmentation_Project/result/aug/BCE_COMPRESS_512_LAND_COVER/best_model/2024-08-07_model_name_=DeepLabV3Plus_epoch130_BCEWithLogitsLoss_landcover_compress_512
-  - /home/oury/Documents/Segmentation_Project/result/aug/BCE_CROP_256_LAND_COVER/best_model/2024-07-22_model_name_=DeepLabV3Plus_epoch60_BCEWithLogitsLoss_crop
-  - /home/oury/Documents/Segmentation_Project/result/aug/BCE_CROP_512_LAND_COVER/best_model/2024-07-29_model_name_=DeepLabV3Plus_epoch150_BCEWithLogitsLoss_crop
-  - /home/oury/Documents/Segmentation_Project/result/aug/DICELOSS_COMPRESS_512_LANDCOVER/best_model/2024-08-11_model_name_=DeepLabV3Plus_epoch10_DiceLoss_landcover_compress_512
-  - /home/oury/Documents/Segmentation_Project/result/aug/DICELOSS_CROP_256_LAND_COVER/best_model/2024-08-05_model_name_=DeepLabV3Plus_epoch40_DiceLoss_landcover_crop_256
-  - /home/oury/Documents/Segmentation_Project/result/aug/DICELOSS_CROP_512_LANDCOVER/best_model/2024-08-08_model_name_=DeepLabV3Plus_epoch10_DiceLoss_landcover_crop_512
-  - /home/oury/Documents/Segmentation_Project/models/DiceLoss_landcover_crop_256
-  save_dir: /home/oury/Documents/Segmentation_Project/benchmark 
 

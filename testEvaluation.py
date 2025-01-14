@@ -10,8 +10,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 from sklearn.metrics import jaccard_score , confusion_matrix
 from utils.plot_utils import *
 
-
-
 #test data
 def test_evaluation(train_dir,cfg):
         #config
@@ -47,7 +45,7 @@ def test_evaluation(train_dir,cfg):
                         with torch.no_grad():
                                 #predict and take time
                                 start_time = time.time()
-                                output = predict(model, input)
+                                output = model_predict(model, input)
                                 end_time = time.time() - start_time
                                 acc_timer += end_time
                                 output = output.cpu().numpy()
@@ -103,19 +101,8 @@ def test_evaluation(train_dir,cfg):
         compare_models_performers(models_dict, metric_path)
         return
 
-
-
-
 if __name__ == "__main__":
         train_dir = '/workspace/results'
         model = load_model(cfg) 
         test_evaluation(train_dir,model,cfg)
-
-
-
-
-
-
-        
-
 

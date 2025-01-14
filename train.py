@@ -7,6 +7,7 @@ import sys
 from utils.data_utils import * 
 import torch
 from utils.train_utlis import *
+from utils.image_utils import *
 torch.backends.cudnn.enabled = False
 from datetime import datetime
 import yaml
@@ -42,8 +43,6 @@ def train(cfg): #Pull all the vars from the config file
 
     #transform
     transform_dict = cfg['transformes']['types']
-    p = cfg['transformes']['possibility']
-    degrees = cfg['transformes']['degrees']
 
     #model
     model_name = cfg['model']['model_name']
@@ -57,16 +56,16 @@ def train(cfg): #Pull all the vars from the config file
 
     # Create a directory for the train
     save_dir = train_dir(model_name)
-    checkpoints_dir = os.path.join(save_dir,'checkpoint')
+    checkpoints_dir = os.path.join(save_dir,'checkpoints')
     os.makedirs(checkpoints_dir, exist_ok=True)
 
     # load the data
-    train_loader, val_loader= load_data(cfg,desirable_class,batch_size,data_dir)
+    train_loader, val_loader= load_data(cfg,desirable_class,batch_size,data_dir,test_mode=None)
 
     # Initialize the model, loss function, and optimizer
     model = load_model(cfg)   
     optimizer = select_optimizer(model,optimizer_name,lr,weight_decay)
-    criterion = select_loss(criterion_name,data_dir,loss_mode,desirable_class,log_loss,from_logits,smooth,ignore_index,eps)
+    criterion  = select_loss(criterion_name,data_dir,loss_mode,desirable_class,log_loss,from_logits,smooth,ignore_index,eps,train_loader)
     
     # Training loop
     num_iter = len(train_loader)
@@ -82,26 +81,31 @@ def train(cfg): #Pull all the vars from the config file
             loss_val = 0
             acc_val = 0    
             with tqdm(total=num_iter, desc="batch Progress",ncols=100  , unit='iter',bar_format=bar_format1) as iter_bar:
+                
                 # Training step
                 model.train()
                 acc_train= 0 
                 batch_loss = 0.0
-                for images, masks in train_loader:
-                    torch.cuda.empty_cache()    
-                    images, masks = images.to(device), masks.to(device)                    
+                for batch_idx, batch in enumerate(train_loader):
+                    images, masks = batch
+                    # to device
+                    images, masks = images.to(device), masks.to(device)
                     
-                    # Forward pass1
+                    # Validity check             
+                    # compare(images,masks)
+                    
+                    # Forward pass
                     outputs = model(images)[0]
-                    one_hot_mask = one_hot(masks,desirable_class)
-                    loss = criterion(outputs, one_hot_mask)
+                    loss_masks = masks.squeeze(1).long()                    
+                    loss = criterion(outputs,loss_masks)
+
+                    # Calculate accuracy and loss of iter
+                    item_accuracy = get_accuracy(outputs,masks)
 
                     # Backward pass and optimization
                     loss.backward()
                     optimizer.step()
                     optimizer.zero_grad()
-
-                    # Calculate accuracy and loss of iter
-                    item_accuracy = get_accuracy(outputs,masks,desirable_class)
                     
                     # Calculate accuracy and lose of epoch
                     batch_loss += loss.item() * images.size(0) # multiply batch loss by the size batch
@@ -116,15 +120,18 @@ def train(cfg): #Pull all the vars from the config file
         
             # Validation step
             with torch.no_grad():
-                for images, masks in val_loader:
+                for batch_idx, batch in enumerate(val_loader):
+                    images, masks = batch
                     images, masks = images.to(device), masks.to(device)
-                    outputs = model(images)[0]
-                    masks = one_hot(masks,desirable_class)
                     
+                    # Forward pass
+                    outputs = model(images)[0]
+                    loss_masks = masks.squeeze(1).long()
+
                     # Calculate accuracy and loss of the validation
-                    loss = criterion(outputs, masks)
+                    loss = criterion(outputs, loss_masks)
                     loss_val += loss.item() * images.size(0)
-                    acc_val += get_accuracy(outputs,masks,desirable_class)* images.size(0)
+                    acc_val += get_accuracy(outputs,masks)* images.size(0)
                     val_loss = loss_val / len(val_loader.dataset)
                     val_acc = acc_val/len(val_loader.dataset)
 

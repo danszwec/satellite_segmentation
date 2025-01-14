@@ -3,21 +3,19 @@ init()
 from train import train
 from testEvaluation import test_evaluation
 from utils import *
+from torchvision import transforms as T
 import yaml
 from utils.cfg_utils import *
 from utils.data_utils import *
 from utils.image_utils import *
 from utils.plot_utils import *
 from utils.train_utlis import *
-
-
 from inference import *
 
-
-
 if __name__ == "__main__":
-
+    # define the device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # print(f"{Fore.GREEN}Device: {device}{Fore.RESET}")
 
     yaml_file = '/workspace/config.yaml'
     cfg = load_yaml(yaml_file)
@@ -55,7 +53,7 @@ if __name__ == "__main__":
             #Data Configuration Environment
             if menu_ch == "2":         
                 print(f"{Fore.GREEN}Welcome to the data configuration environment. \nThis Environment takes the data and organize it that it will fit to the model{Fore.RESET}")
-                print(f"{Fore.RED}Important! The images and masks must be in 2 separate folders (images, masks) in the same directory!{Fore.RESET}\n")
+                print(f"{Fore.RED}Important! \nWhen you entered the path of your data - The images and masks must be in 2 separate folders (images, masks) in the same directory!{Fore.RESET}\n")
                 data_ch = input(f"{Fore.CYAN}Whould you like to:{Fore.RESET} \n1. Create a new dataset directory \n2. Add data to an existing dataset directory \n")
                 # divide the data and save it in the new directory
                 if data_ch == "1":
@@ -96,40 +94,31 @@ if __name__ == "__main__":
                 
                 model = load_model(cfg)
                 model.to(device)
+                print(f"{Fore.GREEN}Model loaded successfully.{Fore.RESET}")
                 weight_path = input(f"{Fore.CYAN}Enter the weights path that you want to use:{Fore.RESET} \n")
                 model.load_state_dict(torch.load(weight_path))
                 model.eval()
-                pred_image = input(f"{Fore.CYAN}Enter the image path that you want to predict:{Fore.RESET} \n")
-                temp_dir, original_size = split_image(pred_image)
-                image_list = [os.path.join(temp_dir, item) for item in os.listdir(temp_dir) if os.path.isfile(os.path.join(temp_dir, item))]
-                for image in image_list:
-                    image = Image.open(image).convert("RGB")
+                pred_image_path = input(f"{Fore.CYAN}Enter the image path that you want to predict:{Fore.RESET} \n")
+                image_mode = input(f"{Fore.CYAN}Do you want a segmented image or an image vactor map?{Fore.RESET} \n1. Segmented image \n2. Image vector map \n")
+                image = Image.open(pred_image_path)   #open the image
 
-                    preprocess = transforms.Compose([
-                        transforms.Resize((256, 256)),
-                        transforms.ToTensor(),
-                        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=cfg[0.229, 0.224, 0.225]),
-                    ])
+                # Predict the image
+                pred_tensor = predict(model, image)
 
-                    image_tensor = preprocess(image)
-                    image_tensor = image_tensor.unsqueeze(0).to(device)
-                    with torch.no_grad():
-                        rgb_mask = grey_to_rgb_mask(model,image_tensor)                              # Predict the image
-                        image = add_mask(image_tensor,rgb_mask)
-                        
-                rebuilt_image_path = rebuild_image(temp_dir, original_size, pred_image)   # Rebuild the image
+                # 1. Segmented image
+                if image_mode == "1":
+                   segmented_image(pred_tensor,image,pred_image_path)
+
+                #2. Image vector map
+                if image_mode == "2":
+                   image_vector_map(pred_tensor,pred_image_path)
                 print(f"{Fore.GREEN}The prediction has been completed successfully. \nYou can find the prediction in the image path.{Fore.RESET}\n")
                 continue
+
             #Exit
             if menu_ch == "4":                                                            
                 print(f"{Fore.GREEN}Thank you for using the ELTA Segmentation Model. Goodbye.{Fore.RESET}")
                 exit()
+            
             else:
                 print(f"{Fore.RED}Invalid input. Please try again.{Fore.RESET}\n")
-
-
-            # type_pred = input("visualize (V) or vector map (M)? V/M \n") 
-
-
-
-

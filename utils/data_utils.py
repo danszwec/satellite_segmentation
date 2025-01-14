@@ -1,4 +1,3 @@
-
 import os
 import random
 import shutil
@@ -7,11 +6,12 @@ from torch.utils.data import DataLoader
 from utils.define_datasetclass import SegmentationDataset
 import utils.image_utils
 from datetime import datetime
+import torch
 from torchvision import transforms as T  
 from PIL import Image
+import math
 
-
-date = str(datetime.now().strftime("%Y-%m-%d"))
+date = datetime.now().strftime("%b-%d-%Y_%H:%M")
 
 def train_dir(model_name):
     """
@@ -21,7 +21,7 @@ def train_dir(model_name):
 
     Returns: None
     """
-    train_name = model_name+date
+    train_name = model_name + "_" + date
     save_dir = os.path.join('results',train_name)
     os.makedirs(save_dir, exist_ok=True)
     os.makedirs(os.path.join(save_dir,"checkpoints"), exist_ok=True)
@@ -42,20 +42,19 @@ def get_directories(base_dir: str ,test_mode=None):
             - Path to the validation annotations directory.
     """
     if test_mode:
-        image_train_dir = os.path.join(base_dir, 'images', 'test')
-        mask_train_dir = os.path.join(base_dir, 'annotations', 'test')
-        image_val_dir = os.path.join(base_dir, 'images', 'test')
-        mask_val_dir = os.path.join(base_dir, 'annotations', 'test')
+        image_train_dir = os.path.join(base_dir, 'test', 'images')
+        mask_train_dir = os.path.join(base_dir, 'test', 'masks')
+        image_val_dir = os.path.join(base_dir, 'test', 'images')
+        mask_val_dir = os.path.join(base_dir, 'test', 'masks')
         return image_train_dir, mask_train_dir, image_val_dir, mask_val_dir
         
-
-    image_train_dir = os.path.join(base_dir, 'images', 'training')
-    mask_train_dir = os.path.join(base_dir, 'annotations', 'training')
-    image_val_dir = os.path.join(base_dir, 'images', 'validation')
-    mask_val_dir = os.path.join(base_dir, 'annotations', 'validation')
+    image_train_dir = os.path.join(base_dir, 'train', 'images')
+    mask_train_dir = os.path.join(base_dir, 'train', 'masks')
+    image_val_dir = os.path.join(base_dir, 'val', 'images')
+    mask_val_dir = os.path.join(base_dir, 'val', 'masks')
     return image_train_dir, mask_train_dir, image_val_dir, mask_val_dir
 
-def select_transform(config,test_mode = None):
+def select_transform(config,test_mode=None):
     """
     Select and return image transformations for training and validation based on the given configuration.
 
@@ -71,15 +70,32 @@ def select_transform(config,test_mode = None):
     if test_mode:
         train_transform = []
         return train_transform
-    my_dict = { 'Rotation' :  T.RandomRotation(1),
-    'horizontal_flip' :T.RandomHorizontalFlip(p=1), 'vertical_flip': T.RandomVerticalFlip(p=1),
-    'ColorJitter':T.ColorJitter(brightness=random.uniform(0.1, 0.3), contrast=random.uniform(0.1, 0.3), saturation=random.uniform(0.1, 0.3), hue=random.uniform(0, 0.1))}
+    
+    my_dict = {'horizontal_flip' :T.RandomHorizontalFlip(p=1),
+               'vertical_flip': T.RandomVerticalFlip(p=1),
+               'ColorJitter':T.ColorJitter(brightness=random.uniform(0.9, 1.1),contrast=random.uniform(0.9, 1.1),saturation=random.uniform(0.9, 1.1))}
     
     train_transform = [my_dict[key] for key in my_dict if config['transformes']['types'][key] is True]
     
     return train_transform
 
-def load_data(cfg,desirable_class,batch_size,data_dir,test_mode = None):
+def load_data(cfg,desirable_class,batch_size,data_dir,test_mode):
+    """
+    Load the training and validation data using the given configuration.
+
+    Args: 
+        cfg (dict): Configuration dictionary.
+        desirable_class (int): Number of classes to reduce the masks to.
+        batch_size (int): Batch size for the DataLoader.
+        data_dir (str): Path to the directory containing the dataset.
+        test_mode (bool): If True, load the test data. Defaults to False.
+
+    Returns: 
+        tuple: A tuple containing two DataLoader objects:
+            - DataLoader for the training data.
+            - DataLoader for the validation data.
+    """
+
     #Select the Augmentation
     train_transform  = select_transform(cfg,test_mode)
 
@@ -99,8 +115,8 @@ def load_data(cfg,desirable_class,batch_size,data_dir,test_mode = None):
         number_class = desirable_class)
 
     #DataLoader
-    train_loader = DataLoader(train_dataset, batch_size, shuffle=True, num_workers=4,drop_last=False)
-    val_loader = DataLoader(val_dataset, batch_size, shuffle=False, num_workers=4,drop_last=False)
+    train_loader = DataLoader(train_dataset, batch_size, shuffle=True, num_workers=4,drop_last=False, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size, shuffle=False, num_workers=4,drop_last=False, pin_memory=True)
 
     return train_loader, val_loader
 
@@ -108,99 +124,97 @@ def load_data(cfg,desirable_class,batch_size,data_dir,test_mode = None):
 
 ####image handeling#######
 
-def split_image(image_path, target_size=(512, 512)):
-    """
-    Splits an image into smaller patches of the specified size, pads smaller patches with black pixels,
-    and saves them in a temporary directory.
-
+def split_image(image, target_size=(512, 512)):
+    """ 
+    Splits an image into patches with padding and saves them in a temporary directory.
+    
     Args:
-    - image_path (str): Path to the input image.
+    - image (Tensor): Image to split.
     - target_size (tuple): Target size of the patches (width, height).
 
     Returns:
-    - str: Path to the temporary directory containing the patches.
-    - tuple: Original size of the input image (width, height).
+    - Tensor: Tensor with shape (num_patches, channels, height, width) containing the image patches.
     """
-    # Create a temporary directory in the same location as the image
-    image_dir = os.path.dirname(image_path)
-    temp_dir = os.path.join(image_dir, "temp_patches")
-    os.makedirs(temp_dir, exist_ok=True)
-
-    # Open the image
-    image = Image.open(image_path)
-    if image.mode != "RGB":
-        print(f"Warning: Image {image_path} is not RGB. Converting...")
-        image = image.convert("RGB")
-
+    
     # Image dimensions
-    width, height = image.size
+    channels, height, width = image.shape
+
+    # Calculate the number of patches in each dimension
+    num_patches_x = math.ceil(width / target_size[0])
+    num_patches_y = math.ceil(height / target_size[1])
+    num_patches = num_patches_x * num_patches_y
+    main_tensor = torch.zeros((num_patches,channels, target_size[1], target_size[0]))
+
 
     # Split the image into patches with padding
-    for y in range(0, height, target_size[1]):
-        for x in range(0, width, target_size[0]):
-            # Create a blank black image for padding
-            patch = Image.new("RGB", target_size, color=(0, 0, 0))
+    i=0
+    for y in range(0, height, target_size[0]):
+        for x in range(0, width, target_size[1]):
+            # Calculate patch boundaries
+            h_end = min(y + target_size[0], height)
+            w_end = min(x + target_size[1], width)
+            
+            # Extract patch
+            patch = image[:, y:h_end, x:w_end]
+            
+            # Place patch in output tensor
+            main_tensor[i, :, :patch.shape[1], :patch.shape[2]] = patch
+            i += 1
 
-            # Crop part of the original image
-            box = (x, y, min(x + target_size[0], width), min(y + target_size[1], height))
-            cropped = image.crop(box)
+    return main_tensor
 
-            # Paste the cropped region onto the black patch
-            patch.paste(cropped, (0, 0))
-
-            # Save patch
-            patch_filename = os.path.join(temp_dir, f"{os.path.splitext(os.path.basename(image_path))[0]}_{x}_{y}.png")
-            patch.save(patch_filename)
-
-    return temp_dir, (width, height)
-
-def rebuild_image(temp_dir, original_size, image_path, target_size=(512, 512)):
+def rebuild_image(patches, original_size):
     """
-    Rebuilds the original image from patches by removing black padding and deletes the temporary directory.
+    Rebuilds an image from patches with padding.
 
     Args:
-    - temp_dir (str): Path to the temporary directory containing the patches.
-    - original_size (tuple): The original size of the image (width, height).
-    - image_path (str): Path to the original image.
-    - target_size (tuple): Target size of the patches (width, height).
+    - image (torch.Tensor): Image tensor containing patches.
+    - original_size (tuple): Original size of the image (width, height).
 
     Returns:
-    - str: Path to the rebuilt image.
+    - torch.Tensor: Reconstructed image tensor.
     """
-    # Create a new blank image with the original size
-    rebuilt_image = Image.new("RGB", original_size)
+    #vars
+    num_patches = patches.shape[0]
+    channels = patches.shape[1]
+    patch_height, patch_width = patches.shape[2:]
 
-    # Read patches and paste them into the blank image (removing padding)
-    for patch_name in sorted(os.listdir(temp_dir)):
-        patch_path = os.path.join(temp_dir, patch_name)
-        patch = Image.open(patch_path)
+    # Calculate grid dimensions
+    grid_y = math.ceil(original_size[1] / patch_height)
+    grid_x = math.ceil(original_size[2] / patch_width)
 
-        # Extract coordinates from the filename
-        _, x, y = os.path.splitext(patch_name)[0].rsplit("_", 2)
-        x, y = int(x), int(y)
+    # Initialize output tensor
+    temp_height = grid_y * patch_height
+    temp_width = grid_x * patch_width
+    output = torch.zeros((channels, temp_height, temp_width))
+    
+    # Reconstruct image from patches
+    i = 0
+    for y in range(0, temp_height, patch_height):
+        for x in range(0, temp_width, patch_width):
+            if i >= num_patches:
+                break
+            output[:, y:y+patch_height, x:x+patch_width] = patches[i]
+            i += 1
+        if i >= num_patches:
+            break
+            
+    # Crop to original size
+    output = output[:, :original_size[1], :original_size[2]]
+    
+    return output
 
-        # Determine the actual region to paste (crop black padding if necessary)
-        box = (0, 0, min(target_size[0], original_size[0] - x), min(target_size[1], original_size[1] - y))
-        cropped_patch = patch.crop(box)
-
-        # Paste the cropped patch into the correct position
-        rebuilt_image.paste(cropped_patch, (x, y))
-
-    # Save the rebuilt image
-    rebuilt_image_path = os.path.join(
-        os.path.dirname(image_path), f"{os.path.splitext(os.path.basename(image_path))[0]}_rebuilt.png"
-    )
-    rebuilt_image.save(rebuilt_image_path, "PNG")
-
-    # Cleanup: Delete the temporary directory and its contents
-    shutil.rmtree(temp_dir)
-
-    return rebuilt_image_path
-
-
-######divide data#####################
 
 def calculate_one_percent(directory,train_percents=0.8,val_percents=0.1):
+    """
+    Calculate the number of files for training, validation, and testing based on given percentages.
+    Args:
+        directory (str): The directory containing the files.
+        train_percents (float, optional): The percentage of files to be used for training. Defaults to 0.8.
+        val_percents (float, optional): The percentage of files to be used for validation. Defaults to 0.1.
+    Returns : None  
+    """
+
     try:
         # Count the number of files
         num_files = len(os.listdir(directory))
@@ -214,6 +228,16 @@ def calculate_one_percent(directory,train_percents=0.8,val_percents=0.1):
         return None
 
 def divide_images(images_path,new_path,train_percents=0.8,val_percents=0.1):
+    """
+    Divides images from a given directory into training, validation, and test sets based on specified percentages.
+    Args:
+        images_path (str): The path to the directory containing the images to be divided.
+        new_path (str): The path to the directory where the divided images will be stored.
+        train_percents (float, optional): The percentage of images to be used for training. Default is 0.8.
+        val_percents (float, optional): The percentage of images to be used for validation. Default is 0.1.
+    Returns:
+        None
+    """
     try:
         # Get the list of files
         files = os.listdir(images_path)
@@ -246,9 +270,16 @@ def divide_images(images_path,new_path,train_percents=0.8,val_percents=0.1):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def divide_masks(masks_path,images_path,new_path):
-    try:
+def divide_masks(masks_path,new_path):
+    """
+    Divide masks from a given directory into training, validation, and test sets based on the images directory.
 
+    Args:masks_path (str): The path to the directory containing the masks to be divided.
+        new_path (str): The path to the directory where the divided masks will be stored.
+
+    Returns: None
+    """
+    try:
         #dirs for images
         train_img_path = os.path.join(new_path, 'train', 'images')
         val_img_path = os.path.join(new_path, 'val', 'images')
@@ -283,15 +314,34 @@ def divide_masks(masks_path,images_path,new_path):
     return
 
 def divide_data(data_path = None,new_path = None):
+    """
+    Divide the data into training, validation, and test sets and save them in a new directory.
+
+    Args:
+        data_path (str): The path to the directory containing the data to be divided.
+        new_path (str): The path to the directory where the divided data will be stored.
+
+    Returns: None
+    """
     images_path = os.path.join(data_path, 'images')
     masks_path = os.path.join(data_path, 'masks')
     divide_images(images_path,new_path)
-    divide_masks(masks_path,images_path,new_path)
+    divide_masks(masks_path,new_path)
+    return
 
 
 
 #### cvat convertor ####
 def parse_color_file(base_dir):
+    """
+    Parse the labelmap.txt file and return a dictionary mapping class labels to RGB colors.
+
+    Args:
+        base_dir (str): The base directory where the labelmap.txt file is located.
+    
+    Returns:
+        dict: A dictionary mapping class labels to RGB colors.
+    """
     txt_path = os.path.join(base_dir, 'labelmap.txt')
     label_dict = {}
     with open(txt_path, 'r') as file:
@@ -304,6 +354,16 @@ def parse_color_file(base_dir):
     return label_dict
 
 def fetch_masks(base_dir):
+    """
+    Fetch the masks from the dataset and save them as grayscale images.
+    
+    Args:
+        base_dir (str): The base directory where the dataset is located.
+    
+    Returns:
+        list: A list of the names of the mask files.
+    """
+
     # where the masks are located
     masks_path = os.path.join(base_dir, 'SegmentationClass')
 
@@ -325,6 +385,15 @@ def fetch_masks(base_dir):
     return masks_files
 
 def fetch_images(base_dir,masks_files):
+    """
+    Fetch the images from the dataset and save them in a new directory.
+
+    Args:
+        base_dir (str): The base directory where the dataset is located.
+        masks_files (list): A list of the names of the mask files.
+    
+    Returns: None
+    """
     # where the images are located
     images_path = os.path.join(base_dir, 'JPEGImages')
 
@@ -342,6 +411,14 @@ def fetch_images(base_dir,masks_files):
     return
 
 def pull_data(base_dir):
+    """
+    Pull the images and masks from the dataset and save them in a new directory.
+
+    Args:
+        base_dir (str): The base directory where the dataset is located.
+
+    Returns: None
+    """
     # Fetch the masks and images
     masks_files = fetch_masks(base_dir)
     fetch_images(base_dir, masks_files)
@@ -349,3 +426,11 @@ def pull_data(base_dir):
     # Print a success message
     print("Data has been pulled successfully")
     return
+
+if __name__ == "__main__":
+    image_tensor = Image.open('/workspace/results/606_mask.png')
+    image_array = np.array(image_tensor)
+
+    main_tensor= split_image(image_array)
+    new_tensor = rebuild_image(main_tensor,image_array.shape) 
+    print(image_array.size -(new_tensor==image_array.sum()))

@@ -20,6 +20,10 @@ def plot_confusion_matrix_with_metrics(results, model_path, metric_path):
         - results[6]: Precision values per class (NumPy array)
         - results[7]: F1 score values per class (NumPy array)
     - model_path: Path to save the evaluation metrics plot image (string)
+
+    Returns:
+    - None
+
     """
 
     #checkpoint name
@@ -70,6 +74,9 @@ def compare_models_performers(models_dict, metric_path):
 
     Parameters:
     - models_dict: Dictionary where keys are model names/identifiers, and values are lists of metrics.
+    - metric_path: Path to save the comparison plot image (string)
+    Returns:
+    - None
     """
     # Ensure the dictionary is not empty
     if not models_dict:
@@ -88,14 +95,13 @@ def compare_models_performers(models_dict, metric_path):
     
     metrics_names = ['Pixel Accuracy', 'IoU (Micro)', 'IoU (Weighted)', 'Lowest IoU per Class', 'Recall', 'Precision', 'F1 Score','average time']
 
+    # Extract the model names
+    model_names = [key.split('/')[-1] for key in models_dict.keys()]  
 
-    # Extract data 
-    model_names = [key.split('/')[-1] for key in models_dict.keys()]  # Extract the model names
+    # Convert to a NumPy array for easier slicing
+    metrics = np.array(list(models_dict.values()))
 
-
-    metrics = np.array(list(models_dict.values()))  # Convert to a NumPy array for easier slicing
-    
-     # Set up GridSpec for custom layout
+    # Set up GridSpec for custom layout
     fig = plt.figure(figsize=(25,14))  # Adjust figure size
     gs = gridspec.GridSpec(2, 4, figure=fig)  # 2 rows, 4 columns grid
     
@@ -106,16 +112,8 @@ def compare_models_performers(models_dict, metric_path):
     for i in range(4):  # Bottom row (3 axes)
         axes.append(fig.add_subplot(gs[1, i]))
 
-    # Create a bar graph for each metric
-   # Plot the first metric in a separate axis
-    axes[0].bar(model_names, [metric[0] for metric in metrics], color='skyblue', alpha=0.8)
-    axes[0].set_title(metrics_names[0], fontsize=14)
-    axes[0].set_ylabel(f'Metric {1} Value', fontsize=12)
-    axes[0].set_xlabel('Models', fontsize=12)
-    axes[0].tick_params(axis='x', rotation=45,labelsize=10)
-    
     # Plot the remaining metrics
-    for i in range(1, len(metrics_names)):
+    for i in range(len(metrics_names)):
         axes[i].bar(model_names, [metric[i] for metric in metrics], color='skyblue', alpha=0.8)
         axes[i].set_title(metrics_names[i], fontsize=10)
         axes[i].set_ylabel(f'Metric {i+1} Value', fontsize=7)
@@ -127,10 +125,9 @@ def compare_models_performers(models_dict, metric_path):
     
     # Adjust layout for better spacing
     plt.tight_layout()
-    plt.show()
-
     # Save the figure
     path = os.path.join(metric_path, 'models_comparison.png')
     plt.savefig(path)
-    return
+    plt.close(fig)
 
+    return
