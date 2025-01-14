@@ -216,26 +216,38 @@ These metrics provide a comprehensive evaluation of model performance and effici
 
 
 ### How to use Inference
-**In inference.py - Follow the prompts on-screen to ensure a smooth workflow.**
+**Important! Before proceeding, You MUST verify the number of classes in your pre-trained weights and UPDATE the desired_class value in the config.yaml file accordingly**
+There are two methods to run the inference module:
+1. Using main.py
+2. Using inference.py
 
-1. **Launch the Script:** Run the script from your terminal or command line interface.
+**Method 1: Using main.py**
+This method provides an interactive interface with on-screen prompts
+1. **Launch the Script:** Open your terminal or command line interface, navigate to the project directory and run the script using:
+   ```bash
+   python main.py
+   ```
 2. **Welcome Screen:**
    - You will be presented with a welcome screen.
+![image](https://github.com/user-attachments/assets/6453ad70-6760-41b7-887f-12f24a34e6a7)
    - Select 3 to apply an existing model for image segmentation.
+
 3. **Inference Workflow Environment:**
    - You will enter the Pre-Trained Model Inference workflow environment.
    - Choose the architecture you want to evaluate.
    - Enter the path to the model weights you wish to use.
-   - Provide the path to the image you want to segment.
+   - Provide the path to the image you want to predict.
+   - Choose your output format:
+     - **Press 1** for a segmented image.
+     - **Press 2** for a vector map (GeoJSON)
 
-**Attention! You MUST check the number of classes in the pre-trained weights and UPDATE the desired_class value in the config.yaml file**
-After completing these steps, the script will generate two files in the same directory as the input image:
-1. The segmented image
-2. An .xml file with the segmented poligons (a Vector map)
-   
-ברגע שסיימנו לבנות את האינפרנס וראינו שהוא רץ - להראות איך מפעילים את האינפרנס!
-
-
+**Method 2: Using inference.py**
+This method offers a more direct approach:
+1.  **Prepare Your Environment**:  have your image path and weight path ready inside inference.py script and update the config.yaml file if necessary.
+2.  **Launch the Script:** Open your terminal or command line interface, navigate to the project directory and run the script using:
+   ```bash
+   python inference.py
+   ```
 
 ## Pre-trained Model Results
 Our semantic segmentation model was trained using a DeepLabV3+ architecture with CE loss function, processing 512x512 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
