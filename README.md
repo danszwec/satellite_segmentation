@@ -34,6 +34,13 @@ While the project structure is modular and can accommodate different architectur
 - Ensure that eace image has a corresponding mask
 - All images and masks should be of the same resolution (e.g., **256x256**).
 - Images should be in formats such as **PNG** or **JPEG**, and masks should be **grayscale** images where each pixel corresponds to a class label (e.g., 0 for background, 1 for urban, 2 for forest, etc.).
+- Ensure proper class configuration by following these steps:
+  1. **Match Classes:**
+     - The number of classes must match between your masks and config.yaml
+     - The model supports either 7 classes (full) or 4 classes (reduced)
+  2. **To Reduce Classes:**
+     - Update the 'desirable_class' parameter in config.yaml
+     - Modify the class mapping dictionary in image_utils.py under the class_reduction function
 - **If you want to tag images for this semantic segmentation project, please visit [The CVAT Labeling Infrastructure Guide](https://github.com/danszwec/segmentation-labeling-Toolkit), where you'll find instructions on how to tag and save the images.**
 
 ### Project Directory Structure:
