@@ -269,20 +269,6 @@ The training process includes an early stopping mechanism (`check_convergence` f
 
 **Customization:** You can adjust the early stopping behavior by modifying the epsilon value in your config file.
 
-### How it works:
-
-1. Training must reach a minimum of 30 epochs before early stopping can trigger
-2. After epoch 30, the function monitors the last 10 epochs
-3. If the change in loss values during these 10 epochs is smaller than the epsilon value (defined in the config file), the training stops
-4. This indicates the model has reached a plateau, where further training provides minimal improvement
-
-### Customization:
-You can adjust the early stopping behavior by modifying the epsilon value in your config file:
-
-```yaml
-training:
-  epsilon: 0.001  # Change this value to adjust sensitivity
-
 ## Pre-trained Model Results
 Our semantic segmentation model was trained using a DeepLabV3+ architecture with CE loss function, processing 256x256 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
 ![6](https://github.com/user-attachments/assets/9e403a90-6bab-4dbe-9ced-e6a11dbc5e7b)
