@@ -25,8 +25,8 @@ While the project structure is modular and can accommodate different architectur
   - [How to run a training loop via train.py](#how-to-run-a-training-loop-via-train)
   - [How to run a training loop via main.py](#how-to-run-a-training-loop-via-main)
   - [Test Evaluations and Model Comparison](#test-evaluation-and-model-comparison)
-
   - [How to use "Inference" - Check the model weights on an image](#how-to-use-inference)
+- [Early Stopping System](#early-stopping)
 - [Pre-trained Model Results](#pre-trained-model-results)
 
 ## Getting Started: Important Requirements and Labeling
@@ -259,6 +259,29 @@ This method offers a more direct approach:
    ```bash
    python inference.py
    ```
+## Early Stopping
+The training process includes an early stopping mechanism (`check_convergence` function in `train.py` script) that helps prevent overfitting or platau and reduces unnecessary training time. Early stopping occurs when certain conditions are met during training:
+
+1. Training must reach a minimum of 30 epochs before early stopping can trigger
+2. After epoch 30, the function monitors the last 10 epochs
+3. If the change in loss values during these 10 epochs is smaller than the epsilon value (defined in the config file), the training stops
+4. This indicates the model has reached a plateau, where further training provides minimal improvement
+
+**Customization:** You can adjust the early stopping behavior by modifying the epsilon value in your config file.
+
+### How it works:
+
+1. Training must reach a minimum of 30 epochs before early stopping can trigger
+2. After epoch 30, the function monitors the last 10 epochs
+3. If the change in loss values during these 10 epochs is smaller than the epsilon value (defined in the config file), the training stops
+4. This indicates the model has reached a plateau, where further training provides minimal improvement
+
+### Customization:
+You can adjust the early stopping behavior by modifying the epsilon value in your config file:
+
+```yaml
+training:
+  epsilon: 0.001  # Change this value to adjust sensitivity
 
 ## Pre-trained Model Results
 Our semantic segmentation model was trained using a DeepLabV3+ architecture with CE loss function, processing 256x256 RGB aerial/satellite images. The model's performance exceeded our initial expectations, achieving a remarkable **90% accuracy on the training set and 70% on the validation set,** demonstrating strong generalization capabilities.
