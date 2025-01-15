@@ -84,6 +84,8 @@ To work with the same dataset used in this project, you can download it from htt
 
 To run this project, we recommend using our Docker environment which ensures consistent setup across different systems.
 
+**Note: This Docker image is compatible with CUDA 12.6**
+
 First, make sure you have Docker installed on your system, along with NVIDIA drivers and NVIDIA Container Toolkit installed and properly configured. Once these prerequisites are met, pull our PyTorch Docker image by running
 ```bash
 docker pull nvcr.io/nvidia/pytorch:23.10-py3. 
