@@ -3,7 +3,17 @@ from colorama import Fore, init
 init()
 
 def load_yaml(file_path):
-    """Load a YAML file."""
+    """
+    Load a YAML file.
+
+    Args:
+        file_path (str): The path to the YAML file to be loaded.
+
+    Returns:
+        dict: The contents of the YAML file as a dictionary. 
+              Returns an empty dictionary if the file is not found.
+    
+    """
     try:
         with open(file_path, 'rt') as f:
             cfg = yaml.safe_load(f.read())
@@ -13,13 +23,31 @@ def load_yaml(file_path):
         return {}
 
 def save_yaml(file_path, data):
-    """Save data to a YAML file."""
+    """
+    Save data to a YAML file.
+
+    Args:
+        file_path (str): The path to the file where the YAML data will be saved.
+        data (dict): The data to be saved in YAML format.
+
+    Returns:
+        None
+    """
+    
     with open(file_path, 'w') as file:
         yaml.dump(data, file, default_flow_style=False)
     print(f"Updated YAML file saved at {file_path}.")
 
 def print_sum(config):
-    """Print a summary of the configuration settings."""
+    """
+    Print a summary of the configuration to the console.
+
+    Args:
+        config (dict): The configuration dictionary to be summarized.
+
+    Returns:
+        None
+    """
     
     print(f"{Fore.GREEN}You are going to start training a new model with the following configuration:{Fore.RESET}")    
     print(f"{Fore.CYAN}- Architecture: {Fore.RESET}{config['model']['model_name']}")
@@ -33,10 +61,17 @@ def print_sum(config):
     print(f"{Fore.CYAN}- Number of epochs: {Fore.RESET}{config['train']['num_epochs']}")
     print(f"{Fore.CYAN}- Batch size: {Fore.RESET}{config['train']['batch_size']}\n")
     print(f"{Fore.RED}Starting the training loop..{Fore.RESET}")
+    return
+
 
 def data_and_trainloop_cfg(config):
-    """Prompt user to update the dataset path, name, batch size, and epochs."""
-
+    """
+    Prompt user to update the dataset path, dataset name, batch size, and number of epochs.
+        
+    Args: config (dict): The configuration dictionary to be updated.
+        
+    Returns: None
+    """
     # Update the dataset path and name
     print(f"{Fore.GREEN}The current dataset is: {config['data']['name']}{Fore.RESET}")
     change_dataset = input(f"{Fore.CYAN}Do you want to change the dataset? {Fore.RESET}\nY/n\n")
@@ -87,8 +122,16 @@ def data_and_trainloop_cfg(config):
             print(f"{Fore.RED}Invalid input.{Fore.RESET}")
 
 def update_cfg(config):
-    """Prompt user to update the model architecture, loss function, optimizer, and weight decay."""
+    """
+    Prompt user to update the model architecture, loss function, optimizer, and weight decay value.
 
+    Args:
+        config (dict): The configuration dictionary to be updated.
+
+    Returns:
+        dict: The updated configuration dictionary.
+
+    """
     print(f"{Fore.CYAN}Please select your desired operation by entering the corresponding number.{Fore.RESET}")
 
     # Ask the user for a model name

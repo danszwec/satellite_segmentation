@@ -25,7 +25,7 @@ train:
   back_epochs: 10
   batch_size: 32
   check_convergence_epslion: 0.0001
-  desirable_class: 4
+  desirable_class: 7
   lr: 0.001
   num_epochs: 80
   optimizer_name: AdamW
